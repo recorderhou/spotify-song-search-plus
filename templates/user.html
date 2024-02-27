@@ -6,10 +6,13 @@
 </head>
 <body>
     <h2> Welcome user! Please login:</h2>
-    <form>
-        <input type="text" placeholder="Enter Username" autocomplete="off" required>
-        <input type="password" autocomplete="off" required>
+    <form id="user-login-input">
+        <label for="username">Enter Username:</label>
+        <input id="username" type="text" placeholder="Enter Username" autocomplete="off" required>
+        <label for="password">Enter Password:</label>
+        <input id="password" type="password" autocomplete="off" required>
         <button type="submit">Login</button>
     </form>
+<script src="/static/userauth.js"></script>
 </body>
 </html>
