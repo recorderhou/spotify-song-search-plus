@@ -10,15 +10,22 @@ def hello_world():  # put application's code here
 
 @app.route('/login')
 def login_function():
-    return render_template()
+    return render_template('login.html')
+
 
 @app.route('/search')
 def query_process():
-    return ''
+    return render_template('search_result.html')
+
 
 @app.route('/admin')
 def login_function():
-    return ''
+    return render_template('admin.html')
+
+
+@app.route('/user')
+def login_function():
+    return render_template('user.html')
 
 
 if __name__ == '__main__':
