@@ -6,5 +6,104 @@
 </head>
 <body>
     You are all good, modify the database as you like!
+    <div id="modify-choice">
+        <button onclick="insertData()">Insert</button>
+        <button onclick="modifyData()">Modify</button>
+        <button onclick="deleteData()">Delete</button>
+    </div>
+
+
+    <div id="insert-data">
+        <div id="insert-choice" style="display: none;">
+            <form id="insert-choice-form">
+                <label for="insert-select">Please indicate what you want to insert:</label>
+                <select id="insert-select" multiple>
+                    <option value="song">Song</option>
+                    <option value="video">Video</option>
+                    <option value="lyrics">Lyrics</option>
+                </select>
+                <button type="submit">Confirm</button>
+            </form>
+        </div>
+
+        <div id="insert-form" style="display: none;">
+            <form id="insert-form-input">
+                <div id="insert-song-field" style="display: none;">
+                    <fieldset>
+                        <legend>Song Insert</legend>
+                        <label for="spotify-key">Enter your spotify accessKey:</label>
+                        <input id="spotify-key" type="text" required>
+                        <label for="insert-song">Enter your spotify query:</label>
+                        <input id="insert-song" type="text" required>
+                    </fieldset>
+                </div>
+
+                <div id="insert-video-field" style="display: none;">
+                    <fieldset>
+                        <legend>Video Insert</legend>
+                        <label for="youtube-key">Enter your youtube accessKey:</label>
+                        <input id="youtube-key" type="text" required>
+                        <label for="insert-video">Enter your youtube query:</label>
+                        <input id="insert-video" type="text" required>
+                    </fieldset>
+                </div>
+
+                <div id="insert-lyrics-field" style="display: none;">
+                    <fieldset>
+                        <legend>Lyrics Insert</legend>
+                        <label for="youtube-key">Enter your Genius accessKey:</label>
+                        <input id="youtube-key" type="text" required>
+                        <label for="insert-song">Enter your Genius query</label>
+                        <input id="insert-song" type="text" required>
+                    </fieldset>
+                </div>
+                <button type="submit">Insert</button>
+                <button type="reset">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+
+    <div id="modify-data">
+        <div id="modify-form" style="display: none;">
+            <form id="modify-form-input">
+                <fieldset>
+                    <legend>Modify Queries</legend>
+                    <label for="modify-song">Enter the song name you want to modify:</label>
+                    <input id="modify-song" type="text">
+                    <label for="modify-artist">Enter the artist name of the song you want to modify:</label>
+                    <input id="modify-artist" type="text">
+                </fieldset>
+                <button type="submit">Submit Query</button>
+                <button type="reset">Cancel</button>
+            </form>
+        </div>
+
+        <div id="modify-query-result">
+
+        </div>
+    </div>
+
+    <div id="delete-data">
+        <div id="delete-form" style="display: none;">
+            <form id="delete-form-input">
+                <fieldset>
+                    <legend>Delete</legend>
+                    <label for="delete-song">Enter the song name you want to delete:</label>
+                    <input id="delete-song" type="text">
+                    <label for="delete-artist">Enter the artist name of the song you want to delete:</label>
+                    <input id="delete-artist" type="text">
+                </fieldset>
+                <button type="submit">Submit Query</button>
+                <button type="reset">Cancel</button>
+            </form>
+        </div>
+
+        <div id="delete-query-result">
+
+        </div>
+    </div>
+
+<script src="/static/modifydb.js"></script>
 </body>
 </html>
