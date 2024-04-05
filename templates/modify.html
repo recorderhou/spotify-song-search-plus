@@ -5,6 +5,7 @@
     <title>Title</title>
     <link rel="stylesheet" type="text/css" href="/static/modifydb.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
     You are all good, modify the database as you like!
@@ -30,6 +31,12 @@
 
         <div id="insert-form" style="display: none;">
             <form id="insert-form-input">
+                <div>
+                    <label for="insert-lyrics-song">Enter the song name:</label>
+                    <input id="insert-lyrics-song" type="text" required>
+                    <label for="insert-lyrics-artist">Enter the artist name:</label>
+                    <input id="insert-lyrics-artist" type="text" required>
+                </div>
                 <div id="insert-song-field" style="display: none;">
                     <fieldset>
                         <legend>Song Insert</legend>
@@ -53,10 +60,12 @@
                 <div id="insert-lyrics-field" style="display: none;">
                     <fieldset>
                         <legend>Lyrics Insert</legend>
-                        <label for="youtube-key">Enter your Genius accessKey:</label>
-                        <input id="youtube-key" type="text" required>
-                        <label for="insert-song">Enter your Genius query</label>
-                        <input id="insert-song" type="text" required>
+                        <div>
+                            <label for="genius-key">Enter your Genius accessKey:</label>
+                            <input id="genius-key" type="text" required>
+                            <label for="insert-lyrics">Enter your Genius query</label>
+                            <input id="insert-lyrics" type="text" required>
+                        </div>
                     </fieldset>
                 </div>
                 <button type="submit">Insert</button>

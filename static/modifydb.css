@@ -23,3 +23,64 @@
 .delete-button {
     flex: 1
 }
+
+.song-form {
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.song-form label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+.song-form input[type="text"],
+.song-form input[type="number"],
+.song-form input[type="url"],
+.song-form select {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Added this for better input sizing */
+}
+
+.song-form button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.song-form button:hover {
+    background-color: #45a049;
+}
+
+.expandable-section .expandable-content {
+    display: none;
+    padding-left: 20px;
+}
+
+.expandable-section .expandable-title {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+}
+
+.artist-entry {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+
+/* Style for when the section is expanded */
+.expandable-section.expanded .expandable-content {
+    display: block;
+}
+
