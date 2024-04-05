@@ -44,8 +44,7 @@ def user_auth():
     username = user_login['username']
     password = user_login['password']
     print(username, password)
-    print(username)
-    user = client.distdb0.user.find_one({'username': username})
+    user = client.distdb0.user.find_one({'username': username, 'password': password})
     if user:
         if user['password'] == password:
             session['username'] = username
