@@ -2,10 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Inspired Login</title>
+    <link rel="stylesheet" href="/static/login.css">
 </head>
 <body>
-    <button onclick="window.location.href='/user'">User Login</button>
-    <button onclick="window.location.href='/admin'">Admin Login</button>
+    <header>
+        <img src="{{ url_for('static', filename='image/spotify_logo.png') }}" alt="Spotify Logo" id="logo">
+        <div class="title-and-tagline">
+            <h1>SPOTIFY SONG SEARCH PLUS</h1>
+            <p class="tagline">Enjoy Spotify music with video and lyrics in one place</p>
+        </div>
+    </header>
+    <section id="main-content">
+        <img src="{{ url_for('static', filename='image/music_picture.png') }}" alt="listen to the music" id="hero-image">
+        <div id="login-buttons">
+            <button onclick="window.location.href='/user'">User Login</button>
+            <button onclick="window.location.href='/admin'">Admin Login</button>
+        </div>
+    </section>
 </body>
 </html>
