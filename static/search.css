@@ -99,7 +99,7 @@ button:hover {
 }
 
 .result-text {
-    flex-grow: 4;
+    flex-grow: 3;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -129,4 +129,15 @@ button:hover {
 /* Hide the hero image when search is performed */
 .search-performed #hero-image-container {
     display: none;
+}
+
+
+.rate-button {
+    flex: 1
+}
+
+.starIcon {
+  fill: grey; /* Default color */
+  width: 24px;
+  height: 24px;
 }

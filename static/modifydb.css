@@ -1,0 +1,25 @@
+.search-result {
+    display: flex;
+    background-color: #aaaaaa;
+    margin-bottom: 50px;
+    align-items: center;
+}
+
+.result-media {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+}
+
+.result-media img {
+    height: 64px;
+    width: auto;
+}
+
+.result-text {
+    flex: 3
+}
+
+.delete-button {
+    flex: 1
+}
