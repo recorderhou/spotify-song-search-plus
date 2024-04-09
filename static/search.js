@@ -13,7 +13,7 @@ function hideImages() {
 
 
 function submitQuery() {
-    let let query = `/searchresult?query=${encodeURIComponent(inputQuery)}`;
+    let query = `/searchresult?query=${encodeURIComponent(inputQuery)}`;
     return fetch(query)
         .then(response => response.json())
         .then(data => {
