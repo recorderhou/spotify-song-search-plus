@@ -2,17 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>User Login</title>
+    <link rel="stylesheet" href="/static/user.css"> <!-- 请检查此路径 -->
 </head>
 <body>
-    <h2> Welcome user! Please login:</h2>
-    <form id="user-login-input">
-        <label for="username">Enter Username:</label>
-        <input id="username" type="text" placeholder="Enter Username" autocomplete="off" required>
-        <label for="password">Enter Password:</label>
-        <input id="password" type="password" autocomplete="off" required>
-        <button type="submit">Login</button>
-    </form>
-<script src="/static/userauth.js"></script>
+    <div class="split-layout">
+        <div class="left-container">
+            <img src="/static/image/login_image.png" alt="Music Experience" class="responsive-image"> <!-- 请检查此路径 -->
+        </div>
+        <div class="right-container">
+            <div class="login-box">
+                <img src="/static/image/spotify_logo.png" alt="Spotify Logo" class="spotify-logo"> <!-- 请检查此路径 -->
+                <h2>Welcome user!</h2>
+                <p>Please login or register:</p>
+                <form id="user-login-input">
+                    <!-- Input fields -->
+                    <div class="input-container">
+                        <label for="username">Enter Username:</label>
+                        <input type="text" id="username" placeholder="Enter Username" autocomplete="off" required>
+                    </div>
+                    <div class="input-container">
+                        <label for="password">Enter Password:</label>
+                        <input type="password" id="password" placeholder="Enter Password" autocomplete="off" required>
+                    </div>
+                    <button type="submit" class="login-button">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="/static/userauth.js"></script> <!-- 请检查此路径 -->
 </body>
 </html>

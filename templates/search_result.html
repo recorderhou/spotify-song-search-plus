@@ -7,14 +7,24 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
-    <form id="query-input">
-        <label for="query-text">Enter Query:</label>
-        <input id="query-text" type="search" placeholder="Enter Your Query Here" required>
-        <button type="submit">Submit</button>
-    </form>
+    <div class="center-container">
+        
+        <form id="query-input">
+            <label for="query-text"> Search Music You Like! </label>
+            <input id="query-text" type="search" placeholder="Enter Keywords" required>
+            <button type="submit">Submit</button>
+        </form>
 
-    <div id="search-placeholder">
+        <!-- Moved the hero image container below the search form -->
+        <div id="hero-image-container">
+            <img src="{{ url_for('static', filename='image/search_image.png') }}" alt="Listen to the music" id="hero-image">
+        </div>
+
+        <div id="search-placeholder">
+        </div>
     </div>
-<script src="/static/search.js"></script>
+    <script src="/static/search.js"></script>
 </body>
 </html>
+
+

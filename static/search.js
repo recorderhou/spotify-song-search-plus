@@ -3,8 +3,17 @@ let currentUser = '';
 let clicked = new Array(20).fill(false);
 let userRating = new Array(0);
 
-function submitQuery(){
-    let query = `/searchresult?query=${encodeURIComponent(inputQuery)}`
+function hideImages() {
+    // Hide the image container
+    let imageContainer = document.querySelector('.image-container');
+    if (imageContainer) {
+        imageContainer.style.display = 'none'; // Or add a class that sets display to none
+    }
+}
+
+
+function submitQuery() {
+    let query = `/searchresult?query=${encodeURIComponent(inputQuery)}`;
     return fetch(query)
         .then(response => response.json())
         .then(data => {
@@ -13,13 +22,14 @@ function submitQuery(){
         });
 }
 
+
 function getRating(){
     let query = `/rating?query=${encodeURIComponent(currentUser)}`
     return fetch(query)
         .then(response => response.json())
         .then(data => {
-            console.log(data)
-            return data
+            console.log(data);
+            return data;
         });
 }
 
@@ -104,17 +114,17 @@ function updateStars(rate_div, curRating, resIndex, res) {
 
 
 function displayResult() {
-    submitQuery().then( result=> {
-        console.log(result)
-        let element = document.getElementById('search-placeholder')
-        let displayedResult = 0
+    submitQuery().then(result => {
+        console.log(result);
+        let element = document.getElementById('search-placeholder');
+        let displayedResult = 0;
         for (let [resIndex, res] of result.entries()) {
             if (displayedResult === 20) {
                 break;
             }
-            console.log(res.name)
+            console.log(res.name);
             let div = document.createElement("div");
-            div.className = 'search-result'
+            div.className = 'search-result';
             div.innerHTML = `
                 <div class="result-media">
                     <img src="${res.album.images[0].url}" class="result-img" alt="${res.album.name}">
@@ -124,7 +134,7 @@ function displayResult() {
                     <p class="result-artist">${res.artists.map(artist => artist.name).join(', ')}</p>
                     <p class="result-album">${res.album.name}</p>
                 </div>
-            `
+            `;
             if (res.video_info.length > 0) {
                 let p = document.createElement('div')
                 p.className = 'video-link'
@@ -196,15 +206,16 @@ function displayResult() {
             element.appendChild(div)
             displayedResult++;
         }
-    })
+    });
 }
 
 document.getElementById('query-input').addEventListener('submit', function (e) {
-    e.preventDefault()
-    let element = document.getElementById('search-placeholder')
-    element.innerHTML = ''
-    inputQuery = document.getElementById('query-text').value
-    console.log(inputQuery)
+    e.preventDefault();
+    document.body.classList.add('search-performed');
+    let element = document.getElementById('search-placeholder');
+    element.innerHTML = '';
+    inputQuery = document.getElementById('query-text').value;
+    console.log(inputQuery);
     fetch('/session_data')
         .then(result => result.json())
         .then(data => {
@@ -218,11 +229,12 @@ document.getElementById('query-input').addEventListener('submit', function (e) {
                         userRating = data.rating
                     });
                 console.log('userRating is', userRating);
-                displayResult()
+                hideImages(); // Hide images before displaying results
+    displayResult();
             }
             else {
                 element.innerHTML = '<p id="no-login-warn">You need to login to view content! Go to <a href="/user">Login</a></p>'
             }
         }
         )
-})
+});

@@ -1,0 +1,135 @@
+/* Reset some default styles */
+body, h1, p, button {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Apply a general font to the body. */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #000; /* Spotify's background color */
+    color: #fff; /* For general text */
+    padding-top: 200px; /* Increase the top padding to move everything down */
+}
+
+header {
+    display: flex;
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+    position: absolute; /* Absolute positioning to take it out of flow */
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+#logo {
+    position: absolute; /* Absolute position to place it on top left */
+    top: 20px; /* Distance from the top */
+    left: 20px; /* Distance from the left */
+    width: 150px; /* Adjust the size of the logo */
+}
+
+.title-and-tagline {
+    text-align: center; /* Centers the title and tagline */
+    margin-top: 130px; /* Adjust the top margin to move it down */
+}
+
+h1 {
+    font-size: 2.5rem; /* Increase font size for larger view */
+    color: #1DB954; /* Spotify green */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px; /* Space above tagline */
+}
+
+.tagline {
+    color: #fff; /* White color for the text */
+    font-style: italic; /* Italic style for a tagline effect */
+    font-size: 1.5rem; /* Slightly smaller font size than the title */
+    margin-bottom: 20px; /* Space above the images */
+}
+
+#main-content {
+    text-align: center; /* Center content */
+    margin-top: 40px; /* Increase top margin to lower the content */
+}
+
+#hero-image {
+    max-width: 60%; /* Adjust the size of the image */
+    height: auto;
+    margin: 20px auto; /* Center image horizontally */
+}
+
+#login-buttons {
+    display: flex;
+    justify-content: center; /* Center buttons horizontally */
+    gap: 20px; /* Space between buttons */
+    margin-top: 30px; /* Increase the top margin to move buttons down */
+}
+
+button {
+    background-color: #1DB954; /* Spotify's brand green color */
+    color: #fff;
+    border: none;
+    padding: 15px 40px; /* Increase padding for larger buttons */
+    border-radius: 50px; /* Rounded buttons */
+    font-size: 18px; /* Increase font size for readability */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #1ed760; /* A lighter green for hover effect */
+}
+
+button:active {
+    transform: scale(0.98); /* Small effect to show the button is being pressed */
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-top: 60px; /* Less top padding on smaller screens */
+    }
+    
+    .title-and-tagline {
+        margin-top: 30px; /* Less top margin on smaller screens */
+    }
+
+    header {
+        position: static; /* Let the header flow naturally on small screens */
+    }
+    
+    #logo {
+        position: static; /* Logo flows naturally within the header */
+        width: 120px; /* Smaller logo on mobile */
+        margin-bottom: 20px; /* Add some space below the logo */
+    }
+    
+    h1 {
+        font-size: 2rem; /* Smaller font size for the title on mobile */
+    }
+    
+    .tagline {
+        font-size: 1.2rem; /* Adjust the font size for the tagline on mobile */
+    }
+    
+    #main-content {
+        margin-top: 20px; /* Reduce the top margin on mobile */
+    }
+    
+    #hero-image {
+        max-width: 90%; /* Larger image on mobile */
+    }
+    
+    #login-buttons {
+        flex-direction: column; /* Stack buttons on top of each other on mobile */
+        margin-top: 20px; /* Adjust the top margin for buttons on mobile */
+    }
+    
+    button {
+        padding: 12px 30px; /* Adjust padding for buttons on mobile */
+        font-size: 16px; /* Adjust font size for buttons on mobile */
+    }
+    
+}
