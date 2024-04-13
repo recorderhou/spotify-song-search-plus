@@ -142,13 +142,19 @@ def query():
 def delete_query():
     song = request.args.get('song', default='', type=str)
     artist = request.args.get('artist', default='', type=str)
+    print(song)
+    print(artist)
     collection = client.distdb0.test_delete
     res = []
     query = {'name': {'$regex': song, '$options': 'i'}, 'prim_artist': {'$regex': artist, '$options': 'i'} }
     for document in collection.find(query):
+        print(document)
         document['_id'] = str(document['_id'])
         for video in document['video_info']:
             video['_id'] = str(video['_id'])
+        if 'lyrics_info' in document.keys():
+            for lyrics in document['lyrics_info']:
+                lyrics['_id'] = str(lyrics['_id'])
         res.append(document)
     return jsonify(res)
 

@@ -8,7 +8,7 @@ let insertVideo;
 let insertLyric;
 let insertQueryResult;
 let selectedSong;
-let selectedTemplate
+let selectedTemplate;
 
 function insertData() {
     console.log('insert place')
@@ -81,6 +81,51 @@ function removeVideo(element, index, entryIndex) {
 
     // Then, remove the artist entry from the DOM
     element.closest('.video-entry').remove();
+    modifyCache.video_info.splice(index, 1)
+    // You would also need to re-render the form or update indexes if necessary
+    // Update the indexes of the remaining artist entries
+    const videoEntries = document.querySelectorAll('.expandable-video .video-entry');
+    videoEntries.forEach((entry, newIndex) => {
+        const input = entry.querySelector('.video-name-input');
+        const urlInput = entry.querySelector('.video-url-input');
+        const artistInput = entry.querySelector('.video-artist-input');
+        const idInput = entry.querySelector('.video-id-input');
+        const cancelIcon = entry.querySelector('.cancel-icon');
+        if (input) {
+            input.setAttribute('data-index', newIndex);
+            urlInput.setAttribute('data-index', newIndex);
+            artistInput.setAttribute('data-index', newIndex);
+            idInput.setAttribute('data-index', newIndex);
+        }
+        if (cancelIcon) {
+            cancelIcon.setAttribute('onclick', `removeVideo(this, ${newIndex})`);
+        }
+    });
+
+    // You would also need to re-render the form or update indexes if necessary
+}
+
+function removeLyrics(element, index, entryIndex) {
+    // Here, you'd handle the logic to remove the artist from your data
+    // For example, if you have an array `artists` that reflects the data, you'd do:
+    // artists.splice(index, 1);
+
+    // Then, remove the artist entry from the DOM
+    element.closest('.video-entry').remove();
+    modifyCache.video_info.splice(index, 1)
+    // You would also need to re-render the form or update indexes if necessary
+    // Update the indexes of the remaining artist entries
+    const videoEntries = document.querySelectorAll('.expandable-lyrics .lyrics-entry');
+    videoEntries.forEach((entry, newIndex) => {
+        const input = entry.querySelector('.artist-name-input');
+        const cancelIcon = entry.querySelector('.cancel-icon');
+        if (input) {
+            input.setAttribute('data-index', newIndex);
+        }
+        if (cancelIcon) {
+            cancelIcon.setAttribute('onclick', `removeVideo(this, ${newIndex})`);
+        }
+    });
 
     // You would also need to re-render the form or update indexes if necessary
 }
@@ -97,8 +142,8 @@ function updateSearchResult() {
 }
 
 function saveChanges() {
-    console.log('inside delete')
-    fetch('/modify', {
+    console.log('inside modify')
+    fetch('/modifyquery', {
         method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -119,6 +164,10 @@ function cancelChanges(index) {
     modifyCache = modifyResult[index]
 }
 
+function reformatData(formData) {
+
+}
+
 
 function displayModifySongs () {
     let res = modifyResult;
@@ -127,7 +176,7 @@ function displayModifySongs () {
         let div = document.createElement("div");
         div.className = 'modify-template'
         div.innerHTML = `
-                <div class="search-result">
+                <div class="search-result" data-index="${entryIndex}">
                     <div class="result-media">
                         <img src="${entry.album.images[0].url}" class="result-img" alt="${entry.album.name}">
                     </div>
@@ -139,12 +188,26 @@ function displayModifySongs () {
                 </div>
             `;
         div.onclick = function () {
+            let allResult = element.querySelectorAll('.search-result')
             let searchResult = this.querySelector('.search-result');
             let insertedDiv = searchResult.nextElementSibling; // Get the sibling element immediately following result-text
             if (insertedDiv && insertedDiv.classList.contains('inserted-div')) {
                 // If the div exists, remove it
                 insertedDiv.remove();
+                allResult.forEach((element, index) => {
+                    if (index !== entryIndex) {
+                        element.style.display = '';  // Show the clicked element
+                    }
+                });
             } else {
+                modifyCache = modifyResult[entryIndex];
+                allResult.forEach((element, index) => {
+                    if (index === entryIndex) {
+                        element.style.display = '';  // Show the clicked element
+                    } else {
+                        element.style.display = 'none';  // Hide other elements
+                    }
+                });
                 // If the div doesn't exist, create and insert it
                 let newDiv = document.createElement("div");
                 newDiv.className = "inserted-div";
@@ -152,19 +215,16 @@ function displayModifySongs () {
                     event.stopPropagation()
                 }
                 newDiv.innerHTML = `
-                    <form id="songForm" class="song-form">
+                    <form id="songForm" class="song-form" data-index="${entryIndex}">
                         <label for="name">Name:</label>
                         <input type="text" id="name" name="name" value="${entry.name}"><br><br>
-                        
-                        <label for="artists">Artists:</label>
-                        <input type="text" id="artists" name="artists" value="${entry.artists.map(artist => artist.name).join(', ')}"><br><br>
                         
                         <div class="expandable-section">
                             <p class="expandable-title" onclick="toggleExpandable(this)">Artists</p>
                             <div class="expandable-content expandable-artist">
                                 ${entry.artists.map((artist, index) => `
                                     <div class="artist-entry">
-                                        <input type="text" class="artist-name-input" value="${artist.name}" data-index="${index}" />
+                                        <input type="text" name="artistName_${index}" class="artist-name-input" value="${artist.name}" data-index="${index}" />
                                         ${index > 0 ? `<span class="material-symbols-outlined cancel-icon" onclick="removeArtist(this, ${index})">cancel</span>` : ''}
                                     </div>
                                 `).join('')}
@@ -196,11 +256,11 @@ function displayModifySongs () {
                                     <div class="video-entry">
                                         <fieldset>
                                             <legend> Video ${index} ${video.title}</legend>
+                                            <input type="text" name="video-name-${index}" class="video-name-input" value="${video.title}" data-index="${index}" />
+                                            <input type="text" name="video-url-${index}" class="video-url-input" value="${video.url}" data-index="${index}" />
+                                            <input type="text" name="video-artist-${index}" class="video-artist-input" value="${video.artist}" data-index="${index}" />
+                                            <input type="text" name="video-id-${index}" class="video-id-input" value="${video._id}" data-index="${index}" />
                                             <span class="material-symbols-outlined cancel-icon" data-index="${index}" onclick="removeVideo(this, ${index})">cancel</span>
-                                            <input type="text" class="video-name-input" value="${video.title}" data-index="${index}" />
-                                            <input type="text" class="video-url-input" value="${video.url}" data-index="${index}" />
-                                            <input type="text" class="video-artist-input" value="${video.artist}" data-index="${index}" />
-                                            <input type="text" class="video-id-input" value="${video._id}" data-index="${index}" />
                                         </fieldset>
                                     </div>
                                     
@@ -209,18 +269,31 @@ function displayModifySongs () {
                         </div>
                         
                         <!-- Repeat for any other fields you need -->
-                        <button type="button" onclick="saveChanges(${entryIndex})">Save Changes</button>
+                        <button type="submit">Save Changes</button>
                         <button type="button" onclick="cancelChanges()">Cancel</button>
                     </form>
 
                 `;
                 searchResult.insertAdjacentElement("afterend", newDiv);
+                document.getElementById('songForm').addEventListener('submit', function (e) {
+                    e.preventDefault(); // Prevent the default form submission
+                    const formData = new FormData(this);
+                    const reformatFromData = reformatData(formData);
+                    let addedDiv = document.querySelector('.inserted-div');
+                    addedDiv.remove();
+                    allResult.forEach((element, index) => {
+                        if (index !== entryIndex) {
+                            element.style.display = '';  // Show the clicked element
+                        }
+                    });
+                })
             }
 
         }
         element.appendChild(div);
     }
 }
+
 
 document.getElementById('modify-form-input').addEventListener('submit', function (e) {
     e.preventDefault()
