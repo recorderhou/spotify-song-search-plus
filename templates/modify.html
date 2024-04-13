@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Database Modification</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100vh;
+        }
+
+        .top-half {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            flex: 1;
+            width: 100%; 
+            overflow: hidden;
+        }
+
+        .bottom-half, #insert-data, #modify-data, #delete-data {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex: 0 1 auto; /* Don't let this container grow, but allow it to shrink */
+            padding-top: 0; /* Reduce padding on the top if any */
+            margin-top: 40px; /* Adjust this value to move the menu up */
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2em;
+            padding: 20px 0;
+        }
+
+        #modify-choice {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px 0;
+        }
+
+        #modify-choice button {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #modify-choice button:hover {
+            background-color: #555;
+        }
+
+        #modify-choice img {
+            height: 20px;
+            width: auto;
+        }
+
+        .centered-image {
+            max-width: 80%;
+            max-height: 50vh;
+            object-fit: cover;
+            margin-top: -20px;
+        }
+
+        #insert-choice-form,
+        #modify-choice-form,
+        #delete-choice-form {
+            background: rgba(86, 88, 91, 0.9); /* Semi-transparent */
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 200px;
+            margin: 10px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #insert-select,
+        #modify-select, /* You need to add this id to your modify form select element */
+        #delete-select  /* You need to add this id to your delete form select element */ {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .form-buttons button,
+        #insert-choice-form button[type="submit"],
+        #modify-choice-form button[type="submit"], /* Apply styles to the submit button of modify form */
+        #delete-choice-form button[type="submit"]  /* Apply styles to the submit button of delete form */ {
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-right: 10px;
+        }
+
+        .form-buttons button:hover,
+        #insert-choice-form button[type="submit"]:hover,
+        #modify-choice-form button[type="submit"]:hover, /* Hover effect for modify submit button */
+        #delete-choice-form button[type="submit"]:hover  /* Hover effect for delete submit button */ {
+            background-color: #45a049;
+        }
+
+        /* If you have Cancel buttons for modify and delete forms, apply similar styles as for the insert form cancel button */
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        .form-buttons button {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        
+        #spotify-logo {
+        position: absolute; /* Position relative to the nearest positioned ancestor or to the body */
+        top: 0; /* 0px from the top */
+        left: 0; /* 0px from the left */
+        height: 50px; /* Adjust the size as needed */
+        width: auto; /* Maintain aspect ratio */
+        z-index: 10; /* Make sure it's on top of other elements if necessary */
+    }
+
+    </style>
+</head>
+<body>
+
+    <div class="top-half">
+        <img src="/static/image_oy/listen_to_music2.png" alt="Listening to Music" class="centered-image">
+        <img src="/static/image_oy/spotify_logo2.png" alt="Spotify Logo" id="spotify-logo" />
+    </div>
+
+    <div class="bottom-half">
+        <h1>You are all good, modify the database as you like!</h1>
+        <div id="modify-choice">
+            <button onclick="insertData()">
+                <img src="/static/image_oy/insert.png" alt="Insert Icon"> Insert
+            </button>
+            <button onclick="modifyData()">
+                <img src="/static/image_oy/modify.png" alt="Modify Icon"> Modify
+            </button>
+            <button onclick="deleteData()">
+                <img src="/static/image_oy/delete.png" alt="Delete Icon"> Delete
+            </button>
+        </div>
+    </div> 
+
+    <div id="insert-data">
+        <div id="insert-choice" style="display: none;"> <!-- Set to block to make it visible -->
+            <form id="insert-choice-form">
+                <label for="insert-select">Please indicate what you want to insert:</label>
+                <select id="insert-select" multiple>
+                    <option value="song">Song</option>
+                    <option value="video">Video</option>
+                    <option value="lyrics">Lyrics</option>
+                </select>
+                <div class="form-buttons">
+                    <button type="submit">Confirm</button>
+                    <button type="reset">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+        <div id="insert-form" style="display: none;">
+            <form id="insert-form-input">
+                <div id="insert-song-field" style="display: none;">
+                    <fieldset>
+                        <legend>Song Insert</legend>
+                        <label for="spotify-key">Enter your spotify accessKey:</label>
+                        <input id="spotify-key" type="text" required>
+                        <label for="insert-song">Enter your spotify query:</label>
+                        <input id="insert-song" type="text" required>
+                    </fieldset>
+                </div>
+
+                <div id="insert-video-field" style="display: none;">
+                    <fieldset>
+                        <legend>Video Insert</legend>
+                        <label for="youtube-key">Enter your youtube accessKey:</label>
+                        <input id="youtube-key" type="text" required>
+                        <label for="insert-video">Enter your youtube query:</label>
+                        <input id="insert-video" type="text" required>
+                    </fieldset>
+                </div>
+
+                <div id="insert-lyrics-field" style="display: none;">
+                    <fieldset>
+                        <legend>Lyrics Insert</legend>
+                        <label for="youtube-key">Enter your Genius accessKey:</label>
+                        <input id="youtube-key" type="text" required>
+                        <label for="insert-song">Enter your Genius query</label>
+                        <input id="insert-song" type="text" required>
+                    </fieldset>
+                </div>
+                <button type="submit">Insert</button>
+                <button type="reset">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+
+    <div id="modify-data">
+        <div id="modify-form" style="display: none;">
+            <form id="modify-choice-form" class="choice-form">
+                <fieldset>
+                    <legend>Modify Queries</legend>
+                    <label for="modify-song">Enter the song name you want to modify:</label>
+                    <input id="modify-song" type="text">
+                    <label for="modify-artist">Enter the artist name of the song you want to modify:</label>
+                    <input id="modify-artist" type="text">
+                </fieldset>
+                <div class="form-buttons">
+                    <button type="submit">Submit Query</button>
+                    <button type="reset">Cancel</button>
+                </div>
+            </form>
+        </div>
+    
+    <div id="delete-data">
+        <div id="delete-form" style="display: none;">
+            <form id="delete-choice-form" class="choice-form">
+                <fieldset>
+                    <legend>Delete</legend>
+                    <label for="delete-song">Enter the song name you want to delete:</label>
+                    <input id="delete-song" type="text">
+                    <label for="delete-artist">Enter the artist name of the song you want to delete:</label>
+                    <input id="delete-artist" type="text">
+                </fieldset>
+                <div class="form-buttons">
+                    <button type="submit">Submit Query</button>
+                    <button type="reset">Cancel</button>
+                </div>
+            </form>
+        </div>    
+
+        <div id="delete-query-result">
+
+        </div>
+    </div>
+
+<script src="/static/modifydb.js"></script>
+</body>
+</html>
