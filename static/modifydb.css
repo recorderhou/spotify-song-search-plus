@@ -1,4 +1,142 @@
 /* Add this to a common CSS file */
+body {
+        background-color: black;
+        color: white;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100vh;
+    }
+
+    .top-half {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        flex: 1;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .bottom-half, #insert-data, #modify-data, #delete-data {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        flex: 0 1 auto; /* Don't let this container grow, but allow it to shrink */
+        padding-top: 0; /* Reduce padding on the top if any */
+        margin-top: 40px; /* Adjust this value to move the menu up */
+    }
+
+    h1 {
+        margin: 0;
+        font-size: 2em;
+        padding: 20px 0;
+    }
+
+    #modify-choice {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        padding: 20px 0;
+    }
+
+    #modify-choice button {
+        background-color: #333;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    #modify-choice button:hover {
+        background-color: #555;
+    }
+
+    #modify-choice img {
+        height: 20px;
+        width: auto;
+    }
+
+    .centered-image {
+        max-width: 80%;
+        max-height: 50vh;
+        object-fit: cover;
+        margin-top: -20px;
+    }
+
+    #insert-choice-form,
+    #modify-choice-form,
+    #delete-choice-form {
+        background: rgba(86, 88, 91, 0.9); /* Semi-transparent */
+        padding: 10px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 200px;
+        margin: 10px auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #insert-select,
+    #modify-select, /* You need to add this id to your modify form select element */
+    #delete-select  /* You need to add this id to your delete form select element */ {
+        width: 100%;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .form-buttons button,
+    #insert-choice-form button[type="submit"],
+    #modify-choice-form button[type="submit"], /* Apply styles to the submit button of modify form */
+    #delete-choice-form button[type="submit"]  /* Apply styles to the submit button of delete form */ {
+        background-color: #4CAF50;
+        color: white;
+        padding: 5px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin-right: 10px;
+    }
+
+    .form-buttons button:hover,
+    #insert-choice-form button[type="submit"]:hover,
+    #modify-choice-form button[type="submit"]:hover, /* Hover effect for modify submit button */
+    #delete-choice-form button[type="submit"]:hover  /* Hover effect for delete submit button */ {
+        background-color: #45a049;
+    }
+
+    /* If you have Cancel buttons for modify and delete forms, apply similar styles as for the insert form cancel button */
+
+    label {
+        display: block;
+        margin-top: 10px;
+    }
+
+    .form-buttons button {
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    #spotify-logo {
+    position: absolute; /* Position relative to the nearest positioned ancestor or to the body */
+    top: 0; /* 0px from the top */
+    left: 0; /* 0px from the left */
+    height: 50px; /* Adjust the size as needed */
+    width: auto; /* Maintain aspect ratio */
+    z-index: 10; /* Make sure it's on top of other elements if necessary */
+}
+
+
+
 .navbar {
     background-color: #333;
     color: white;

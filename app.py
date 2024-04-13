@@ -236,6 +236,7 @@ def insert():
         input = request.json
         if input['type'] == 'song':
             track = input['track']
+            print(track)
             prim_artist = track['artists'][0]['name']
             hash_value = h(prim_artist)
             album = {"id": track['album']['id'], "images": track['album']['images'], "name": track['album']['name'],

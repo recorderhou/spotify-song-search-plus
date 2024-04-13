@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Database Modification</title>
     <link rel="stylesheet" type="text/css" href="/static/modifydb.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
@@ -17,12 +17,18 @@
             <li><a href="/contact">Contact</a></li>
         </ul>
     </nav>
-    You are all good, modify the database as you like!
-    <div id="modify-choice">
-        <button id="modify-insert" onclick="insertData()">Insert</button>
-        <button id="modify-modify" onclick="modifyData()">Modify</button>
-        <button id="modify-delete" onclick="deleteData()">Delete</button>
+
+    <div class="top-half">
+        <img src="/static/image/login_image.png" alt="Listening to Music" class="centered-image">
+        <img src="/static/image/login_image1.png" alt="Spotify Logo" id="spotify-logo" />
+        You are all good, modify the database as you like!
+        <div id="modify-choice">
+            <button id="modify-insert" onclick="insertData()">Insert</button>
+            <button id="modify-modify" onclick="modifyData()">Modify</button>
+            <button id="modify-delete" onclick="deleteData()">Delete</button>
+        </div>
     </div>
+
 
 
     <div id="insert-data">
@@ -35,8 +41,10 @@
                     <option value="video">Video</option>
                     <option value="lyrics">Lyrics</option>
                 </select>
-                <button type="submit">Confirm</button>
-                <button type="reset">Cancel</button>
+                <div class="form-buttons">
+                    <button type="submit">Confirm</button>
+                    <button type="reset">Cancel</button>
+                </div>
             </form>
         </div>
 
