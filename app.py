@@ -2,11 +2,21 @@ from bson import ObjectId
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 from db import client
 import os
+import requests
+from googleapiclient.discovery import build
 
 app = Flask(__name__)
 
 
 app.secret_key = os.urandom(24)
+
+
+def h(name):
+    if len(name) == 0:
+        return 0
+    return ord(name[0]) % 4
+
+
 
 
 @app.route('/')
@@ -153,6 +163,123 @@ def delete():
         return ({'success': True})
     except:
         return ({'success': False})
+
+# assume we can only modify one entry at a time
+@app.route('/modifyquery', methods=['POST', 'GET'])
+def modify_query():
+    pass
+
+@app.route('/insert', methods=['POST', 'GET'])
+def insert():
+    if request.method == 'GET':
+        type = request.args.get('type')
+        key = request.args.get('key')
+        query = request.args.get('query')
+        if type == 'song':
+            spotify_key = key
+            headers = {
+                'Authorization': f'Bearer {spotify_key}',
+            }
+            spotify_query = query
+            endpoint = 'https://api.spotify.com/v1/search'
+            params = {'q': spotify_query, 'type': 'track'}
+            response = requests.get(endpoint, headers=headers, params=params)
+            print(response)
+            tracks = response.json()['tracks']['items']
+            print(tracks)
+            return tracks
+        elif type == 'video':
+            youtube_key = key
+            youtube_query = query
+            # Set up the YouTube API client
+            youtube = build('youtube', 'v3', developerKey=youtube_key)
+            response = youtube.search().list(
+                q=youtube_query,
+                part="snippet",
+                type="video",
+                maxResults=50  # Specify the number of results you want
+            ).execute()
+            videos = response['items']
+            print(videos)
+            return videos
+        elif type == 'lyrics':
+            geniusKey = key
+            headers = {
+                'Authorization': f'Bearer {geniusKey}',
+            }
+            genius_query = query
+            endpoint = 'https://api.genius.com'
+            search_url = f"{endpoint}/search"
+            data = {'q': genius_query}
+            response = requests.get(search_url, params=data, headers=headers)
+            lyrics = response.json()['response']['hits']
+            return lyrics
+    elif request.method == 'POST':
+        input = request.json
+        if input['type'] == 'song':
+            track = input['track']
+            prim_artist = track['artists'][0]['name']
+            hash_value = h(prim_artist)
+            album = {"id": track['album']['id'], "images": track['album']['images'], "name": track['album']['name'],
+                     "release_date": track['album']['release_date']}
+            artists = [{"id": art['id'], "name": art['name']} for art in track['artists']]
+            song = {"name": track['name'], "artists": artists, "album": album, "popularity": track['popularity'],
+                    "explicit": track['explicit'], "type": track['type'], "duration_ms": track['duration_ms'],
+                    "preview_url": track['preview_url'], "id": track['id'], "prim_artist": artists[0]['name'], "video_info": [], "lyrics_info": []}
+            print(hash_value)
+            try:
+                if hash_value == 0:
+                    client.distdb0.test_insert.insert_one(song)
+                elif hash_value == 1:
+                    client.distdb1.test_insert.insert_one(song)
+                elif hash_value == 2:
+                    client.distdb2.test_insert.insert_one(song)
+                elif hash_value == 3:
+                    client.distdb3.test_insert.insert_one(song)
+                return ({'success': True})
+            except Exception as e:
+                print(str(e))
+                return ({'success': False, 'message': str(e)})
+        elif input['type'] == 'video':
+            track = input['track']
+            print(track)
+            new_video = input['video']
+            new_id = ObjectId()
+            insert_video = {
+                '_id': new_id,
+                'video_id': new_video['id']['videoId'],
+                'song_title': new_video['snippet']['title'],
+                'artist_name': track['prim_artist']
+            }
+            print(insert_video)
+            try:
+                client.distdb0.test_delete.update_one({'_id': ObjectId(track['_id'])}, {'$push': {'video_info': insert_video}},
+                                                      upsert=True)
+                return ({'success': True})
+            except Exception as e:
+                print(str(e))
+                return ({'success': False, 'message': str(e)})
+        elif input['type'] == 'lyrics':
+            track = input['track']
+            print(track)
+            new_lyrics = input['lyrics']
+            new_id = ObjectId()
+            insert_lyrics = {
+                '_id': new_id,
+                'title': new_lyrics['result']['full_title'],
+                'url': new_lyrics['result']['url'],
+                'artist': track['prim_artist']
+            }
+            print(insert_lyrics)
+            try:
+                client.distdb0.test_delete.update_one({'_id': ObjectId(track['_id'])}, {'$push': {'lyrics_info': insert_lyrics}},
+                                                      upsert=True)
+                return ({'success': True})
+            except Exception as e:
+                print(str(e))
+                return ({'success': False, 'message': str(e)})
+
+
 
 
 

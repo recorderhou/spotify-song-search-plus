@@ -6,13 +6,14 @@
     <link rel="stylesheet" type="text/css" href="/static/modifydb.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
     You are all good, modify the database as you like!
     <div id="modify-choice">
-        <button onclick="insertData()">Insert</button>
-        <button onclick="modifyData()">Modify</button>
-        <button onclick="deleteData()">Delete</button>
+        <button id="modify-insert" onclick="insertData()">Insert</button>
+        <button id="modify-modify" onclick="modifyData()">Modify</button>
+        <button id="modify-delete" onclick="deleteData()">Delete</button>
     </div>
 
 
@@ -20,30 +21,42 @@
         <div id="insert-choice" style="display: none;">
             <form id="insert-choice-form">
                 <label for="insert-select">Please indicate what you want to insert:</label>
-                <select id="insert-select" multiple>
+                <!--  multiple onchange="updateOptions()" -->
+                <select id="insert-select">
                     <option value="song">Song</option>
                     <option value="video">Video</option>
                     <option value="lyrics">Lyrics</option>
                 </select>
                 <button type="submit">Confirm</button>
+                <button type="reset">Cancel</button>
             </form>
         </div>
 
         <div id="insert-form" style="display: none;">
-            <form id="insert-form-input">
-                <div>
-                    <label for="insert-lyrics-song">Enter the song name:</label>
-                    <input id="insert-lyrics-song" type="text" required>
-                    <label for="insert-lyrics-artist">Enter the artist name:</label>
-                    <input id="insert-lyrics-artist" type="text" required>
+            <form id="insert-filter-input">
+                <div id="insert-song-query" style="display: none;">
+                    <fieldset>
+                        <legend>Song Query</legend>
+                        <label for="song-name">Song Name:</label>
+                        <input id="song-name" type="text">
+                        <label for="song-artist">Primary Artist Name:</label>
+                        <input id="song-artist" type="text">
+                    </fieldset>
+                    <button type="submit">Search</button>
+                    <button type="reset">Cancel</button>
                 </div>
+            </form>
+            <div id="insert-filter-result">
+
+            </div>
+            <form id="insert-form-input">
                 <div id="insert-song-field" style="display: none;">
                     <fieldset>
                         <legend>Song Insert</legend>
                         <label for="spotify-key">Enter your spotify accessKey:</label>
-                        <input id="spotify-key" type="text" required>
+                        <input id="spotify-key" type="text">
                         <label for="insert-song">Enter your spotify query:</label>
-                        <input id="insert-song" type="text" required>
+                        <input id="insert-song" type="text">
                     </fieldset>
                 </div>
 
@@ -51,9 +64,9 @@
                     <fieldset>
                         <legend>Video Insert</legend>
                         <label for="youtube-key">Enter your youtube accessKey:</label>
-                        <input id="youtube-key" type="text" required>
+                        <input id="youtube-key" type="text">
                         <label for="insert-video">Enter your youtube query:</label>
-                        <input id="insert-video" type="text" required>
+                        <input id="insert-video" type="text">
                     </fieldset>
                 </div>
 
@@ -62,15 +75,18 @@
                         <legend>Lyrics Insert</legend>
                         <div>
                             <label for="genius-key">Enter your Genius accessKey:</label>
-                            <input id="genius-key" type="text" required>
+                            <input id="genius-key" type="text">
                             <label for="insert-lyrics">Enter your Genius query</label>
-                            <input id="insert-lyrics" type="text" required>
+                            <input id="insert-lyrics" type="text">
                         </div>
                     </fieldset>
                 </div>
                 <button type="submit">Insert</button>
                 <button type="reset">Cancel</button>
             </form>
+        </div>
+        <div id="insert-query-result">
+
         </div>
     </div>
 
