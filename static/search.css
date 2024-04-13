@@ -10,6 +10,37 @@ body {
     min-height: 100vh; /* This ensures the page takes full viewport height */
 }
 
+/* Add this to a common CSS file */
+.navbar {
+    background-color: #333;
+    color: white;
+    overflow: hidden;
+}
+
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar li {
+    float: left;
+}
+
+.navbar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.navbar li a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+
 /* Use a container to center everything before search */
 .center-container {
     display: flex;
