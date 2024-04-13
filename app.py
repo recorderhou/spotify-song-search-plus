@@ -173,7 +173,19 @@ def delete():
 # assume we can only modify one entry at a time
 @app.route('/modifyquery', methods=['POST', 'GET'])
 def modify_query():
-    pass
+    input = request.json
+    select_id = input['_id']
+    input.pop('_id', None)
+    for video in input['video_info']:
+        video['_id'] = ObjectId(video['_id'])
+    for lyrics in input['lyrics_info']:
+        lyrics['_id'] = ObjectId(lyrics['_id'])
+    try:
+        client.distdb0.test_delete.update_one({'_id': ObjectId(select_id)}, {'$set': input})
+        return {'success': True}
+    except Exception as e:
+        print(str(e))
+        return {'success': False, 'message': str(e)}
 
 @app.route('/insert', methods=['POST', 'GET'])
 def insert():

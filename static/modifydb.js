@@ -74,38 +74,36 @@ function removeArtist(element, index) {
     });
 }
 
-function removeVideo(element, index, entryIndex) {
+function removeLyrics(element, index, entryIndex) {
     // Here, you'd handle the logic to remove the artist from your data
     // For example, if you have an array `artists` that reflects the data, you'd do:
     // artists.splice(index, 1);
 
     // Then, remove the artist entry from the DOM
-    element.closest('.video-entry').remove();
-    modifyCache.video_info.splice(index, 1)
+    element.closest('.lyrics-entry').remove();
+    modifyCache.lyrics_info.splice(index, 1)
     // You would also need to re-render the form or update indexes if necessary
     // Update the indexes of the remaining artist entries
-    const videoEntries = document.querySelectorAll('.expandable-video .video-entry');
+    const videoEntries = document.querySelectorAll('.expandable-lyrics .lyrics-entry');
     videoEntries.forEach((entry, newIndex) => {
-        const input = entry.querySelector('.video-name-input');
-        const urlInput = entry.querySelector('.video-url-input');
-        const artistInput = entry.querySelector('.video-artist-input');
-        const idInput = entry.querySelector('.video-id-input');
+        const input = entry.querySelector('.lyrics-title-input');
+        const urlInput = entry.querySelector('.lyrics-url-input');
+        const artistInput = entry.querySelector('.lyrics-artist-input');
         const cancelIcon = entry.querySelector('.cancel-icon');
         if (input) {
             input.setAttribute('data-index', newIndex);
             urlInput.setAttribute('data-index', newIndex);
             artistInput.setAttribute('data-index', newIndex);
-            idInput.setAttribute('data-index', newIndex);
         }
         if (cancelIcon) {
-            cancelIcon.setAttribute('onclick', `removeVideo(this, ${newIndex})`);
+            cancelIcon.setAttribute('onclick', `removeLyrics(this, ${newIndex})`);
         }
     });
 
     // You would also need to re-render the form or update indexes if necessary
 }
 
-function removeLyrics(element, index, entryIndex) {
+function removeVideo(element, index, entryIndex) {
     // Here, you'd handle the logic to remove the artist from your data
     // For example, if you have an array `artists` that reflects the data, you'd do:
     // artists.splice(index, 1);
@@ -117,10 +115,14 @@ function removeLyrics(element, index, entryIndex) {
     // Update the indexes of the remaining artist entries
     const videoEntries = document.querySelectorAll('.expandable-lyrics .lyrics-entry');
     videoEntries.forEach((entry, newIndex) => {
-        const input = entry.querySelector('.artist-name-input');
+        const videoId = entry.querySelector('.video-id-input');
+        const videoTitle = entry.querySelector('.video-title-input');
+        const videoArtist = entry.querySelector('.video-artist-input');
         const cancelIcon = entry.querySelector('.cancel-icon');
-        if (input) {
-            input.setAttribute('data-index', newIndex);
+        if (videoId) {
+            videoId.setAttribute('data-index', newIndex);
+            videoTitle.setAttribute('data-index', newIndex);
+            videoArtist.setAttribute('data-index', newIndex);
         }
         if (cancelIcon) {
             cancelIcon.setAttribute('onclick', `removeVideo(this, ${newIndex})`);
@@ -141,7 +143,7 @@ function updateSearchResult() {
     document.querySelector('.result-album').textContent = entry.album.name;
 }
 
-function saveChanges() {
+function saveChanges(index) {
     console.log('inside modify')
     fetch('/modifyquery', {
         method: 'POST',
@@ -153,9 +155,10 @@ function saveChanges() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                updateSearchResult()
+                modifyResult[index] = modifyCache
             } else {
                 console.log('modify failed');
+                console.log(data.message)
             }
         })
 }
@@ -165,6 +168,42 @@ function cancelChanges(index) {
 }
 
 function reformatData(formData) {
+    let returnData = {}
+    for (let [key, value] of formData.entries()){
+        const baseKey = key.split('_')[0];  // Assuming your key format is 'baseName_index'
+        if (returnData.hasOwnProperty(baseKey)) {
+            // Handle multiple entries with the same name, assume they are multiple selections or arrays
+            if (!Array.isArray(returnData[baseKey])) {
+                // Convert existing entry into an array
+                returnData[baseKey] = [returnData[baseKey]];
+            }
+            // Push new entry into the array
+            returnData[baseKey].push(value);
+        } else {
+            // Assign single entry value
+            returnData[baseKey] = value;
+        }
+    }
+    modifyCache.name = returnData.name;
+    modifyCache.prim_artist = returnData.artist[0];
+    modifyCache.album.name = returnData.albumName;
+    modifyCache.album.release_date = returnData.albumDate;
+    modifyCache.popularity = returnData.popularity;
+    modifyCache.explicit = returnData.explicit;
+    modifyCache.duration_ms = returnData.durationMs;
+    for (let [index, entry] of modifyCache.video_info.entries()) {
+        entry.video_id = returnData['video-id'][index];
+        entry.song_title = returnData['video-title'][index];
+        entry.artist_name = returnData['video-artist'][index];
+    }
+    for (let [index, entry] of modifyCache.lyrics_info.entries()) {
+        entry.title = returnData['lyrics-title'][index];
+        entry.url = returnData['lyrics-url'][index];
+        entry.artist = returnData['lyrics-artist'][index];
+    }
+
+    console.log(returnData)
+    console.log(modifyCache)
 
 }
 
@@ -219,35 +258,61 @@ function displayModifySongs () {
                         <label for="name">Name:</label>
                         <input type="text" id="name" name="name" value="${entry.name}"><br><br>
                         
+                        <label for="artist">Primary Artist:</label>
+                        <input type="text" id="artist" name="artist" value="${entry.prim_artist}"><br><br>
+                        
                         <div class="expandable-section">
-                            <p class="expandable-title" onclick="toggleExpandable(this)">Artists</p>
+                            <p class="expandable-title" onclick="toggleExpandable(this)">Featured Artists</p>
                             <div class="expandable-content expandable-artist">
                                 ${entry.artists.map((artist, index) => `
                                     <div class="artist-entry">
-                                        <input type="text" name="artistName_${index}" class="artist-name-input" value="${artist.name}" data-index="${index}" />
-                                        ${index > 0 ? `<span class="material-symbols-outlined cancel-icon" onclick="removeArtist(this, ${index})">cancel</span>` : ''}
+                                        ${index > 0 ? `
+                                        <input type="text" name="artist_${index}" class="artist-name-input" value="${artist.name}" data-index="${index}" />
+                                        <span class="material-symbols-outlined cancel-icon" onclick="removeArtist(this, ${index})">cancel</span>` : ''}
                                     </div>
                                 `).join('')}
                             </div>
                         </div>
                         
+                       
                         <label for="albumName">Album Name:</label>
-                        <input type="text" id="albumName" name="albumName" value="${entry.album.name}"><br><br>
+                        <input type="text" id="albumName" name="albumName" value="${entry.album.name}">
+                        <label for="albumDate">Album Release Date:</label>
+                        <input type="text" id="albumDate" name="albumDate" value="${entry.album.release_date}"><br><br>
+                        <br><br>
+                        
+                        <label for="popularity">Popularity:</label>
+                        <input type="number" id="popularity" name="popularity" value="${entry.popularity}"><br><br>
                         
                         <label for="explicit">Explicit:</label>
                         <select id="explicit" name="explicit">
-                            <option value="true" selected>True</option>
-                            <option value="false">False</option>
+                            <option value="true" ${entry.explicit ? 'selected' : ''}>True</option>
+                            <option value="false" ${entry.explicit ? '' : 'selected'}>False</option>
                         </select><br><br>
                         
                         <label for="durationMs">Duration (ms):</label>
-                        <input type="number" id="durationMs" name="durationMs" value="119871"><br><br>
+                        <input type="number" id="durationMs" name="durationMs" value="${entry.duration_ms}"><br><br>
                         
                         <label for="previewUrl">Preview URL:</label>
-                        <input type="url" id="previewUrl" name="previewUrl" value="https://p.scdn.co/mp3-preview/7d8cded800c0a0c0431c8da0ffa86..."><br><br>
+                        <input type="url" id="previewUrl" name="previewUrl" value="${entry.preview_url}"><br><br>
                         
-                        <label for="albumId">Album ID:</label>
-                        <input type="text" id="albumId" name="albumId" value="2yZKBF1qe0EpnBsIhAg9Z0"><br><br>
+                        <div class="expandable-section">
+                            <p class="expandable-title" onclick="toggleExpandable(this)">Lyrics Info</p>
+                            <div class="expandable-content expandable-lyrics">
+                                ${entry.lyrics_info.map((lyrics, index) => `
+                                    <div class="lyrics-entry">
+                                        <fieldset>
+                                            <legend> Video ${index} ${lyrics.title}</legend>
+                                            <input type="text" name="lyrics-title_${index}" class="lyrics-name-input" value="${lyrics.title}" data-index="${index}" />
+                                            <input type="text" name="lyrics-url_${index}" class="lyrics-url-input" value="${lyrics.url}" data-index="${index}" />
+                                            <input type="text" name="lyrics-artist_${index}" class="lyrics-artist-input" value="${lyrics.artist}" data-index="${index}" />
+                                            <span class="material-symbols-outlined cancel-icon" data-index="${index}" onclick="removeLyrics(this, ${index})">cancel</span>
+                                        </fieldset>
+                                    </div>
+                                    
+                                    `).join('')}
+                            </div>
+                        </div>
                         
                         <div class="expandable-section">
                             <p class="expandable-title" onclick="toggleExpandable(this)">Video Info</p>
@@ -255,11 +320,10 @@ function displayModifySongs () {
                                 ${entry.video_info.map((video, index) => `
                                     <div class="video-entry">
                                         <fieldset>
-                                            <legend> Video ${index} ${video.title}</legend>
-                                            <input type="text" name="video-name-${index}" class="video-name-input" value="${video.title}" data-index="${index}" />
-                                            <input type="text" name="video-url-${index}" class="video-url-input" value="${video.url}" data-index="${index}" />
-                                            <input type="text" name="video-artist-${index}" class="video-artist-input" value="${video.artist}" data-index="${index}" />
-                                            <input type="text" name="video-id-${index}" class="video-id-input" value="${video._id}" data-index="${index}" />
+                                            <legend> Video ${index} ${video.song_title}</legend>
+                                            <input type="text" name="video-id_${index}" class="video-id-input" value="${video.video_id}" data-index="${index}" />
+                                            <input type="text" name="video-title_${index}" class="video-title-input" value="${video.song_title}" data-index="${index}" />
+                                            <input type="text" name="video-artist_${index}" class="video-artist-input" value="${video.artist_name}" data-index="${index}" />
                                             <span class="material-symbols-outlined cancel-icon" data-index="${index}" onclick="removeVideo(this, ${index})">cancel</span>
                                         </fieldset>
                                     </div>
@@ -270,7 +334,7 @@ function displayModifySongs () {
                         
                         <!-- Repeat for any other fields you need -->
                         <button type="submit">Save Changes</button>
-                        <button type="button" onclick="cancelChanges()">Cancel</button>
+                        <button type="reset">Cancel</button>
                     </form>
 
                 `;
@@ -278,7 +342,8 @@ function displayModifySongs () {
                 document.getElementById('songForm').addEventListener('submit', function (e) {
                     e.preventDefault(); // Prevent the default form submission
                     const formData = new FormData(this);
-                    const reformatFromData = reformatData(formData);
+                    reformatData(formData);
+                    saveChanges(entryIndex);
                     let addedDiv = document.querySelector('.inserted-div');
                     addedDiv.remove();
                     allResult.forEach((element, index) => {
