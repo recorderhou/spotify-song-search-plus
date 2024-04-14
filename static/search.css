@@ -113,42 +113,55 @@ button:hover {
 .search-result {
     background-color: #fff;
     color: #000;
-    margin-top: 20px; /* Add some space on top of each result */
+    margin-top: 20px;
     padding: 20px;
-    border-radius: 30px;
-    width: 100%; /* Result takes full width of its container */
+    border-radius: 10px; /* Adjusted for a sharper curve */
+    width: calc(100% - 40px); /* Subtracting the left and right padding from 100% width */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-between; /* This separates the elements on both ends */
 }
 
 .result-media img {
-    height: 128px; /* Adjust as needed */
-    width: auto;
+    height: 150px; /* Increase height as needed */
+    width: 150px; /* Increase width as needed */
     margin-right: 20px;
+    object-fit: cover; /* This will cover the area without stretching the image */
+    border-radius: 10px; /* Optional: if you want rounded corners */
 }
 
+/* Ensure the surrounding container of the image adjusts with the new size */
+.result-media {
+    flex: 0 0 auto; /* Do not grow, do not shrink, be auto based on content */
+    margin-right: 20px;
+}
 .result-text {
-    flex-grow: 3;
+    flex-grow: 1; /* Allows the text to grow and fill available space */
     display: flex;
     flex-direction: column;
     justify-content: space-around;
 }
 
+.rate-button {
+    /* This class may need to be adjusted to handle the flex layout of stars */
+    display: flex; /* Set the rate-button area to be a flex container */
+    align-items: center; /* Center the items vertically */
+    justify-content: center; /* Center the items horizontally */
+    margin-left: 10px; /* Add some space before the stars */
+}
+
+.starIcon {
+    /* Ensure the stars are displayed inline */
+    margin: 0 2px; /* Adjust spacing between stars */
+}
+
 .video-link {
     display: flex;
-    flex: 1;
-    justify-content: flex-end;
-}
-
-.video-link a {
-    color: #00f;
-    text-decoration: none;
-}
-
-.video-link a:hover {
-    text-decoration: underline;
+    align-items: center;
+    justify-content: center; /* Center the link */
+    margin-left: 10px; /* Add some space before the video link */
+    white-space: nowrap; /* Prevents the link from breaking into multiple lines */
 }
 
 /* Modify alignment after search is performed */
