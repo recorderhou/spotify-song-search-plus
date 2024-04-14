@@ -2,10 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Login Error</title>
+    <link rel="stylesheet" href="/static/userauth.css"> <!-- Make sure this path points to your userauth.css file -->
 </head>
 <body>
-    <h3> Wrong username or password, please try again</h3>
-    <button onclick="window.location.href='/'">Retry</button>
+    <div class="split-layout">
+        <div class="left-container">
+            <!-- Keep the image from the second screenshot -->
+            <img src="/static/image/login_image1.png" alt="Music Experience" class="responsive-image">
+        </div>
+        <div class="right-container">
+            <div class="error-message">
+                <h3>Wrong username or password, please try again</h3>
+                <!-- Update the onclick attribute to redirect to admin.html -->
+                <button class="retry-button" onclick="window.location.href='/'">Retry</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
