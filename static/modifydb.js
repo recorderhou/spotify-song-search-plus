@@ -18,8 +18,12 @@ function insertData() {
     displayElement.style.display = 'block';
     let insertElement = document.getElementById('insert-choice');
     insertElement.style.display = 'block';
+    let modifyData = document.getElementById('modify-data');
+    modifyData.style.display = 'none';
     let modifyElement = document.getElementById('modify-form');
     modifyElement.style.display = 'none';
+    let deleteData = document.getElementById('delete-data');
+    deleteData.style.display = 'none';
     let deleteElement = document.getElementById('delete-form');
     deleteElement.style.display = 'none';
 
@@ -32,12 +36,43 @@ function modifyData() {
     console.log('modify place')
     document.getElementById('modify-insert').disabled = true;
     document.getElementById('modify-delete').disabled = true;
+    let displayElement = document.getElementById('insert-data');
+    displayElement.style.display = 'none';
     let insertElement = document.getElementById('insert-choice');
     insertElement.style.display = 'none';
+    let modifyData = document.getElementById('modify-data');
+    modifyData.style.display = 'block';
     let modifyElement = document.getElementById('modify-form');
     modifyElement.style.display = 'block';
+    let deleteData = document.getElementById('delete-data');
+    deleteData.style.display = 'none';
     let deleteElement = document.getElementById('delete-form');
     deleteElement.style.display = 'none';
+
+    let buttonElement = document.getElementById('modify-choice');
+    let buttons = buttonElement.querySelectorAll('button');
+    for (let index in buttons) buttons[index].disabled = true;
+}
+
+function deleteData() {
+    document.getElementById('modify-insert').disabled = true;
+    document.getElementById('modify-modify').disabled = true;
+    let displayElement = document.getElementById('insert-data');
+    displayElement.style.display = 'none';
+    let insertElement = document.getElementById('insert-choice');
+    insertElement.style.display = 'none';
+    let modifyData = document.getElementById('modify-data');
+    modifyData.style.display = 'none';
+    let modifyElement = document.getElementById('modify-form');
+    modifyElement.style.display = 'none';
+    let deleteData = document.getElementById('delete-data');
+    deleteData.style.display = 'block';
+    let deleteElement = document.getElementById('delete-form');
+    deleteElement.style.display = 'block';
+
+    let buttonElement = document.getElementById('modify-choice');
+    let buttons = buttonElement.querySelectorAll('button');
+    for (let index in buttons) buttons[index].disabled = true;
 }
 
 function toggleExpandable(titleElement) {
@@ -384,26 +419,20 @@ document.getElementById('modify-form-input').addEventListener('submit', function
 })
 
 document.getElementById('modify-form-input').addEventListener('reset', function (e) {
-    document.getElementById('modify-insert').disabled = false;
-    document.getElementById('modify-delete').disabled = false;
+    let buttonElement = document.getElementById('modify-choice');
+    let buttons = buttonElement.querySelectorAll('button');
+    for (let index in buttons) buttons[index].disabled = false;
     let element = document.getElementById('modify-query-result')
     element.innerHTML = ''
     element.style.display = 'none'
     let parentElement = document.getElementById('modify-data')
     parentElement.style.display = 'none'
+    let currentElement = document.getElementById('modify-form')
+    currentElement.style.display = 'none'
 })
 
 
-function deleteData() {
-    document.getElementById('modify-insert').disabled = true;
-    document.getElementById('modify-modify').disabled = true;
-    let insertElement = document.getElementById('insert-choice');
-    insertElement.style.display = 'none';
-    let modifyElement = document.getElementById('modify-form');
-    modifyElement.style.display = 'none';
-    let deleteElement = document.getElementById('delete-form');
-    deleteElement.style.display = 'block';
-}
+
 
 function deleteSong(element) {
     // Your code to handle the click event
@@ -423,7 +452,7 @@ function deleteSong(element) {
         .then(data => {
             if (data.success) {
                 console.log('deletion successful');
-                deleteResult.splice(index, 1);
+                // deleteResult.splice(index, 1);
                 let parentDiv = element.closest('.search-result');
                 if (parentDiv) {
                     parentDiv.remove();
@@ -462,15 +491,16 @@ function insertSongs (element) {
     let index = element.getAttribute('data-id')
     let insertion = insertSong[index];
     console.log('inside insert')
+    console.log(insertion)
     fetch('/insert', {
         method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: {
+            body: JSON.stringify({
                 'type': 'song',
                 'track': insertion
-            }
+            })
         })
         .then(response => response.json())
         .then(data => {
@@ -583,6 +613,8 @@ function selectInsertTemplate(clickedIndex) {
     });
    let queryForm = document.getElementById("insert-filter-input");
    queryForm.style.display = 'none';
+   let modifyForm = document.getElementById("insert-form-input");
+   modifyForm.style.display = 'block';
    console.log(selectedInsert)
    if (selectedInsert === 'video'){
        const videoElement = document.getElementById('insert-video-field')
@@ -605,6 +637,7 @@ function selectInsertTemplate(clickedIndex) {
 function displayQueriedSongs() {
     let res = insertQueryResult;
     let element = document.getElementById('insert-filter-result')
+    element.style.display = 'block';
     for(let [entryIndex, entry] of res.entries()) {
         console.log('why');
         let div = document.createElement("div");
@@ -705,13 +738,15 @@ document.getElementById('delete-form-input').addEventListener('submit', function
 })
 
 document.getElementById('delete-form-input').addEventListener('reset', function (e) {
-    document.getElementById('modify-insert').disabled = false;
-    document.getElementById('modify-modify').disabled = false;
+    let buttonElement = document.getElementById('modify-choice');
+    let buttons = buttonElement.querySelectorAll('button');
+    for (let index in buttons) buttons[index].disabled = false;
     let element = document.getElementById('delete-query-result')
     element.innerHTML = ''
-    element.style.display = 'none'
     let parentElement = document.getElementById('delete-data')
     parentElement.style.display = 'none'
+    let currentElement = document.getElementById('delete-form')
+    currentElement.style.display = 'none'
 })
 
 function updateOptions() {
@@ -769,8 +804,12 @@ document.getElementById('insert-choice-form').addEventListener('submit', functio
         songInput.forEach((entry, index) => {
             entry.required = true
         });
+        const videoElement = document.getElementById('insert-video-field')
+        videoElement.style.display = 'none';
+        const lyricsElement = document.getElementById('insert-lyrics-field')
+        lyricsElement.style.display = 'none'
 
-        const queryElement = document.getElementById('insert-song-query')
+        const queryElement = document.getElementById('insert-filter-input')
         queryElement.style.display = 'none'
         const queryInput = queryElement.querySelectorAll('input');
         queryInput.forEach((entry, index) => {
@@ -786,10 +825,16 @@ document.getElementById('insert-choice-form').addEventListener('submit', functio
         videoInput.forEach((entry, index) => {
             entry.required = true
         });*/
+        const parentElement = document.getElementById('insert-form-input')
+        parentElement.style.display = 'none'
         const songElement = document.getElementById('insert-song-field')
         songElement.style.display = 'none'
+        const videoElement = document.getElementById('insert-video-field')
+        videoElement.style.display = 'none';
         const lyricsElement = document.getElementById('insert-lyrics-field')
         lyricsElement.style.display = 'none'
+        const formElement = document.getElementById('insert-filter-input')
+        formElement.style.display = 'block'
         const queryElement = document.getElementById('insert-song-query')
         queryElement.style.display = 'block'
         const queryInput = queryElement.querySelectorAll('input');
@@ -804,11 +849,17 @@ document.getElementById('insert-choice-form').addEventListener('submit', functio
         lyricsInput.forEach((entry, index) => {
              entry.required = true
         });*/
+        const parentElement = document.getElementById('insert-form-input')
+        parentElement.style.display = 'none'
         const songElement = document.getElementById('insert-song-field')
         songElement.style.display = 'none'
         const videoElement = document.getElementById('insert-video-field')
         videoElement.style.display = 'none';
+        const lyricsElement = document.getElementById('insert-lyrics-field')
+        lyricsElement.style.display = 'none';
 
+        const formElement = document.getElementById('insert-filter-input')
+        formElement.style.display = 'block'
         const queryElement = document.getElementById('insert-song-query')
         queryElement.style.display = 'block'
         const queryInput = queryElement.querySelectorAll('input');
@@ -837,6 +888,8 @@ document.getElementById('insert-filter-input').addEventListener('submit', functi
     e.preventDefault();
     const songName = document.getElementById('song-name').value
     const songArtist = document.getElementById('song-artist').value
+    const inputForm = document.getElementById('insert-filter-result')
+    inputForm.innerHTML = ''
     let query = `/adminquery?song=${encodeURIComponent(songName)}&artist=${encodeURIComponent(songArtist)}`;
     fetch(query)
         .then(result => result.json())
@@ -854,9 +907,25 @@ document.getElementById('insert-filter-input').addEventListener('submit', functi
     
 })
 
+document.getElementById('insert-filter-input').addEventListener('reset', function (e) {
+    let buttonElement = document.getElementById('modify-choice');
+    let buttons = buttonElement.querySelectorAll('button');
+    for (let index in buttons) buttons[index].disabled = false;
+    let element = document.getElementById('insert-filter-result')
+    element.innerHTML = ''
+    let currentElement = document.getElementById('insert-filter-input')
+    currentElement.style.display = 'none'
+
+})
+
 document.getElementById('insert-form-input').addEventListener('reset', function () {
     let displayElement = document.getElementById('insert-form');
     displayElement.style.display = 'none';
+    let resultElement = document.getElementById('insert-query-result');
+    resultElement.innerHTML = '';
+    let filterElement = document.getElementById('insert-filter-result');
+    filterElement.innerHTML = '';
+
     let buttonElement = document.getElementById('modify-choice');
     let buttons = buttonElement.querySelectorAll('button');
     for (let index in buttons) buttons[index].disabled = false;
@@ -864,11 +933,9 @@ document.getElementById('insert-form-input').addEventListener('reset', function 
 
 document.getElementById('insert-form-input').addEventListener('submit', function (e) {
     e.preventDefault();
-    let displayElement = document.getElementById('insert-form');
-    displayElement.style.display = 'none';
     let buttonElement = document.getElementById('modify-choice');
     let buttons = buttonElement.querySelectorAll('button');
-    for (let index in buttons) buttons[index].disabled = false;
+    for (let index in buttons) buttons[index].disabled = true;
 
     if (selectedInsert === 'song') {
         let spotifyKey = document.getElementById('spotify-key').value

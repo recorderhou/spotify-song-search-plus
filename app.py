@@ -233,6 +233,7 @@ def insert():
             lyrics = response.json()['response']['hits']
             return lyrics
     elif request.method == 'POST':
+        print('inside post')
         input = request.json
         if input['type'] == 'song':
             track = input['track']
