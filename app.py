@@ -127,13 +127,18 @@ def query():
     print(key_words)
     res = []
     for i in range(4):
-        collection = client.distdb0.aggregation_results
+        # Dynamically generate the collection name
+        # Access the collection from the client
+        collection = getattr(client, f'distdb{i}').aggregation_results_new
+        # collection = client.distdb0.aggregation_results
         query = {'name': {'$regex': key_words, '$options': 'i'}}
         for document in collection.find(query):
             document['_id'] = str(document['_id'])
             for video in document['video_info']:
                 video['_id'] = str(video['_id'])
-            print(document)
+            for lyrics in document['lyrics_info']:
+                lyrics['_id'] = str(lyrics['_id'])
+            print(document['prim_artist'])
             res.append(document)
     return jsonify(res)
 
@@ -144,18 +149,19 @@ def delete_query():
     artist = request.args.get('artist', default='', type=str)
     print(song)
     print(artist)
-    collection = client.distdb0.test_delete
     res = []
-    query = {'name': {'$regex': song, '$options': 'i'}, 'prim_artist': {'$regex': artist, '$options': 'i'} }
-    for document in collection.find(query):
-        print(document)
-        document['_id'] = str(document['_id'])
-        for video in document['video_info']:
-            video['_id'] = str(video['_id'])
-        if 'lyrics_info' in document.keys():
-            for lyrics in document['lyrics_info']:
-                lyrics['_id'] = str(lyrics['_id'])
-        res.append(document)
+    for i in range(4):
+        collection = getattr(client, f'distdb{i}').aggregation_results_new
+        query = {'name': {'$regex': song, '$options': 'i'}, 'prim_artist': {'$regex': artist, '$options': 'i'} }
+        for document in collection.find(query):
+            print(document)
+            document['_id'] = str(document['_id'])
+            for video in document['video_info']:
+                video['_id'] = str(video['_id'])
+            if 'lyrics_info' in document.keys():
+                for lyrics in document['lyrics_info']:
+                    lyrics['_id'] = str(lyrics['_id'])
+            res.append(document)
     return jsonify(res)
 
 
@@ -163,9 +169,12 @@ def delete_query():
 def delete():
     deletion = request.json
     print(deletion)
+    hash_value = h(deletion['prim_artist'])
     try:
+        collection = getattr(client, f'distdb{hash_value}').aggregation_results_new
         deletion_id = ObjectId(deletion['_id'])
-        client.distdb0.test_delete.delete_one({'_id': deletion_id})
+        # client.distdb0.test_delete.delete_one({'_id': deletion_id})
+        collection.delete_one({'_id': deletion_id})
         return ({'success': True})
     except:
         return ({'success': False})
@@ -173,19 +182,46 @@ def delete():
 # assume we can only modify one entry at a time
 @app.route('/modifyquery', methods=['POST', 'GET'])
 def modify_query():
-    input = request.json
+    query = request.json
+    input = query['modify']
+    origin = query['origin']
+
+    h_origin = h(origin['prim_artist'])
+    h_input = h(input['prim_artist'])
     select_id = input['_id']
     input.pop('_id', None)
     for video in input['video_info']:
         video['_id'] = ObjectId(video['_id'])
     for lyrics in input['lyrics_info']:
         lyrics['_id'] = ObjectId(lyrics['_id'])
-    try:
-        client.distdb0.test_delete.update_one({'_id': ObjectId(select_id)}, {'$set': input})
-        return {'success': True}
-    except Exception as e:
-        print(str(e))
-        return {'success': False, 'message': str(e)}
+    print(origin['prim_artist'])
+    print(input['prim_artist'])
+    print('origin hash is', h_origin)
+    print('modified hash is', h_input)
+    if h_origin == h_input:
+        try:
+            collection = getattr(client, f'distdb{h_origin}').aggregation_results_new
+            collection.update_one({'_id': ObjectId(select_id)}, {'$set': input})
+            return {'success': True}
+        except Exception as e:
+            print(str(e))
+            return {'success': False, 'message': str(e)}
+    else:
+        try:
+            origin_collection = getattr(client, f'distdb{h_origin}').aggregation_results_new
+            found = origin_collection.find_one({'_id': ObjectId(select_id)})
+            print(found)
+            origin_collection.delete_one({'_id': ObjectId(select_id)})
+            new_collection = getattr(client, f'distdb{h_origin}').aggregation_results_new
+            input['_id'] = ObjectId(select_id)
+            print(input)
+            new_collection.insert_one(input)
+            return {'success': True}
+        except Exception as e:
+            print(str(e))
+            return {'success': False, 'message': str(e)}
+
+
 
 @app.route('/insert', methods=['POST', 'GET'])
 def insert():
@@ -272,8 +308,10 @@ def insert():
                 'artist_name': track['prim_artist']
             }
             print(insert_video)
+            hash_value = h(track['prim_artist'])
             try:
-                client.distdb0.test_delete.update_one({'_id': ObjectId(track['_id'])}, {'$push': {'video_info': insert_video}},
+                collection = getattr(client, f'distdb{hash_value}').aggregation_results_new
+                collection.update_one({'_id': ObjectId(track['_id'])}, {'$push': {'video_info': insert_video}},
                                                       upsert=True)
                 return ({'success': True})
             except Exception as e:
@@ -290,19 +328,16 @@ def insert():
                 'url': new_lyrics['result']['url'],
                 'artist': track['prim_artist']
             }
+            hash_value = h(track['prim_artist'])
             print(insert_lyrics)
             try:
-                client.distdb0.test_delete.update_one({'_id': ObjectId(track['_id'])}, {'$push': {'lyrics_info': insert_lyrics}},
+                collection = getattr(client, f'distdb{hash_value}').aggregation_results_new
+                collection.update_one({'_id': ObjectId(track['_id'])}, {'$push': {'lyrics_info': insert_lyrics}},
                                                       upsert=True)
                 return ({'success': True})
             except Exception as e:
                 print(str(e))
                 return ({'success': False, 'message': str(e)})
-
-
-
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)

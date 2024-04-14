@@ -135,16 +135,27 @@ button:hover {
 .result-media {
     flex: 0 0 auto; /* Do not grow, do not shrink, be auto based on content */
     margin-right: 20px;
+    display: flex;
 }
 .result-text {
+    flex: 3;
     flex-grow: 1; /* Allows the text to grow and fill available space */
     display: flex;
     flex-direction: column;
     justify-content: space-around;
 }
 
+.video-link {
+    flex: 1;
+}
+
+.lyrics-link {
+    flex: 1;
+}
+
 .rate-button {
     /* This class may need to be adjusted to handle the flex layout of stars */
+    flex: 1;
     display: flex; /* Set the rate-button area to be a flex container */
     align-items: center; /* Center the items vertically */
     justify-content: center; /* Center the items horizontally */

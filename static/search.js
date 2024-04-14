@@ -123,6 +123,8 @@ function displayResult() {
                 break;
             }
             console.log(res.name);
+            if (res.lyrics_info.length)
+                console.log(res.lyrics_info[0])
             let div = document.createElement("div");
             div.className = 'search-result';
             div.innerHTML = `
@@ -147,7 +149,23 @@ function displayResult() {
                 let p = document.createElement('div')
                 p.className = 'video-link'
                 p.innerHTML = `
-                    <p class="result-video"><a href="#">No Video</a></p>
+                    <p class="result-video">No Video</p>
+                `
+                div.appendChild(p)
+            }
+            if (res.lyrics_info.length > 0) {
+                let p = document.createElement('div')
+                p.className = 'lyrics-link'
+                let lyricsLink = res.lyrics_info[0].url
+                p.innerHTML = `
+                    <p class="result-lyrics"><a href="${lyricsLink}" target="_blank">Lyrics Link</a></p>
+                `
+                div.appendChild(p)
+            } else {
+                let p = document.createElement('div')
+                p.className = 'lyrics-link'
+                p.innerHTML = `
+                    <p class="result-lyrics">No Lyrics</p>
                 `
                 div.appendChild(p)
             }

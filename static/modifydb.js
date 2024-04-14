@@ -9,6 +9,7 @@ let insertLyric;
 let insertQueryResult;
 let selectedSong;
 let selectedTemplate;
+let originCache;
 
 function insertData() {
     console.log('insert place')
@@ -180,12 +181,16 @@ function updateSearchResult() {
 
 function saveChanges(index) {
     console.log('inside modify')
+    console.log(modifyResult[index])
     fetch('/modifyquery', {
         method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(modifyCache)
+            body: JSON.stringify({
+                'modify': modifyCache,
+                'origin': modifyResult[index]
+            })
         })
         .then(response => response.json())
         .then(data => {
@@ -219,23 +224,38 @@ function reformatData(formData) {
             returnData[baseKey] = value;
         }
     }
+    console.log(returnData)
     modifyCache.name = returnData.name;
-    modifyCache.prim_artist = returnData.artist[0];
+    if (typeof returnData.artist === typeof [1, 2, 3, 4])
+        modifyCache.prim_artist = returnData.artist[0];
+    else
+        modifyCache.prim_artist = returnData.artist;
     modifyCache.album.name = returnData.albumName;
     modifyCache.album.release_date = returnData.albumDate;
     modifyCache.popularity = returnData.popularity;
     modifyCache.explicit = returnData.explicit;
     modifyCache.duration_ms = returnData.durationMs;
-    for (let [index, entry] of modifyCache.video_info.entries()) {
-        entry.video_id = returnData['video-id'][index];
-        entry.song_title = returnData['video-title'][index];
-        entry.artist_name = returnData['video-artist'][index];
-    }
-    for (let [index, entry] of modifyCache.lyrics_info.entries()) {
-        entry.title = returnData['lyrics-title'][index];
-        entry.url = returnData['lyrics-url'][index];
-        entry.artist = returnData['lyrics-artist'][index];
-    }
+    console.log(modifyCache)
+    if (typeof returnData.video_info === typeof [1, 2, 3, 4])
+        for (let [index, entry] of modifyCache.video_info.entries()) {
+            entry.video_id = returnData['video-id'][index];
+            entry.song_title = returnData['video-title'][index];
+            entry.artist_name = returnData['video-artist'][index];
+        }
+    else
+        modifyCache.video_info[0].video_id = returnData['video-id']
+        modifyCache.video_info[0].song_title = returnData['video-title']
+        modifyCache.video_info[0].artist_name = returnData['video-artist']
+    if (typeof returnData.video_info === typeof [1, 2, 3, 4])
+        for (let [index, entry] of modifyCache.lyrics_info.entries()) {
+            entry.title = returnData['lyrics-title'][index];
+            entry.url = returnData['lyrics-url'][index];
+            entry.artist = returnData['lyrics-artist'][index];
+        }
+    else
+        modifyCache.lyrics_info[0].title = returnData['lyrics-title']
+        modifyCache.lyrics_info[0].url = returnData['lyrics-url']
+        modifyCache.lyrics_info[0].artist = returnData['lyrics-artist']
 
     console.log(returnData)
     console.log(modifyCache)
@@ -274,7 +294,8 @@ function displayModifySongs () {
                     }
                 });
             } else {
-                modifyCache = modifyResult[entryIndex];
+                console.log(modifyResult[entryIndex])
+                modifyCache = JSON.parse(JSON.stringify(modifyResult[entryIndex]));
                 allResult.forEach((element, index) => {
                     if (index === entryIndex) {
                         element.style.display = '';  // Show the clicked element
@@ -328,8 +349,8 @@ function displayModifySongs () {
                         <label for="durationMs">Duration (ms):</label>
                         <input type="number" id="durationMs" name="durationMs" value="${entry.duration_ms}"><br><br>
                         
-                        <label for="previewUrl">Preview URL:</label>
-                        <input type="url" id="previewUrl" name="previewUrl" value="${entry.preview_url}"><br><br>
+                        ${entry.preview_url ? `<label for="previewUrl">Preview URL:</label>
+                        <input type="url" id="previewUrl" name="previewUrl" value="${entry.preview_url}"><br><br>` : ''}
                         
                         <div class="expandable-section">
                             <p class="expandable-title" onclick="toggleExpandable(this)">Lyrics Info</p>
@@ -377,8 +398,12 @@ function displayModifySongs () {
                 document.getElementById('songForm').addEventListener('submit', function (e) {
                     e.preventDefault(); // Prevent the default form submission
                     const formData = new FormData(this);
+                    console.log(modifyResult[entryIndex]);
+                    console.log(modifyResult[entryIndex] === modifyCache)
                     reformatData(formData);
+                    console.log(modifyResult[entryIndex]);
                     saveChanges(entryIndex);
+
                     let addedDiv = document.querySelector('.inserted-div');
                     addedDiv.remove();
                     allResult.forEach((element, index) => {
@@ -399,6 +424,7 @@ document.getElementById('modify-form-input').addEventListener('submit', function
     e.preventDefault()
     let element = document.getElementById('modify-query-result')
     element.innerHTML = ''
+    element.style.display = 'block'
     let modifySong = document.getElementById('modify-song').value
     let modifyArtist = document.getElementById('modify-artist').value
     let query = `/adminquery?song=${encodeURIComponent(modifySong)}&artist=${encodeURIComponent(modifyArtist)}`
@@ -408,7 +434,6 @@ document.getElementById('modify-form-input').addEventListener('submit', function
             if (data && data.length){
                 console.log(data)
                 modifyResult = data;
-                modifyCache = data;
                 displayModifySongs()
             }
             else {
@@ -446,7 +471,7 @@ function deleteSong(element) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(deletion)
+            body: JSON.stringify(deleteResult[index])
         })
         .then(response => response.json())
         .then(data => {
