@@ -1,0 +1,56 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #121212; /* Spotify black background */
+}
+
+.split-layout {
+    display: flex;
+    width: 80%;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.left-container {
+    flex: 1;
+}
+
+.right-container {
+    flex: 1;
+    color: white;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.error-message {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.retry-button {
+    background-color: #1DB954; /* Spotify green */
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.retry-button:hover {
+    background-color: #1ed760; /* Lighter green on hover */
+}
