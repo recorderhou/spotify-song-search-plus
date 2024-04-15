@@ -15,13 +15,17 @@ body {
     background-color: #333;
     color: white;
     overflow: hidden;
+    width: 100%; /* Ensure the navbar spans the full width */
 }
-
 .navbar ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
+    display: flex; /* Display the list as a flex container */
+    justify-content: flex-start; /* Align the items to the end (right) */
+    width: 100%; /* Ensure the ul spans the full width */
 }
+
 
 .navbar li {
     float: left;

@@ -173,8 +173,8 @@ def delete():
     try:
         collection = getattr(client, f'distdb{hash_value}').aggregation_results_new
         deletion_id = ObjectId(deletion['_id'])
-        # client.distdb0.test_delete.delete_one({'_id': deletion_id})
-        collection.delete_one({'_id': deletion_id})
+        client.distdb0.test_delete.delete_one({'_id': deletion_id})
+        #collection.delete_one({'_id': deletion_id})
         return ({'success': True})
     except:
         return ({'success': False})
