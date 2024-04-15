@@ -1,30 +1,198 @@
-.search-placeholder {
+body {
+    background-color: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh; /* This ensures the page takes full viewport height */
+}
+
+/* Add this to a common CSS file */
+.navbar {
+    background-color: #333;
+    color: white;
+    overflow: hidden;
+}
+
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar li {
+    float: left;
+}
+
+.navbar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.navbar li a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+
+/* Use a container to center everything before search */
+.center-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+/* Style for the hero image container */
+#hero-image-container {
+    max-width: 800px; /* Adjust based on your design */
+    margin-bottom: 50px; /* Space between the hero image and the search bar */
+    display: flex; /* Center the hero image */
+    justify-content: center; /* Center the hero image */
+}
+
+#hero-image {
+    width: 100%; /* Make the image responsive */
+    border-radius: 20px; /* Assuming you want rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional shadow for aesthetics */
+}
+
+.search-container {
+    width: 100%; /* Full width of the container */
+    max-width: 800px; /* Maximum width of the search bar */
+    margin-top: 50px; /* Space from the top */
+    display: flex;
+    justify-content: center;
+    flex-direction: column; /* Stack the children vertically */
+    align-items: center; /* Center the children horizontally */
+}
+
+#query-text {
+    flex-grow: 1;
+    font-size: 1.2em;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: 2px solid #fff;
+    background-color: #333;
+    color: #fff;
+}
+
+label[for="query-text"] {
+    font-size: 1.3em; /* Increase the font size of the label */
+    color: #fff; /* Adjust the color if needed */
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1.2em;
+    background-color: #1DB954; /* Spotify green */
+    color: #fff;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #17a74b;
+}
+
+/* Styles for search results, aligned left after search */
+#search-results {
+    width: 100%;
+    max-width: 800px; /* Match the max-width of the search container */
+    align-self: flex-start; /* Align to the left */
 }
 
 .search-result {
+    background-color: #fff;
+    color: #000;
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 10px; /* Adjusted for a sharper curve */
+    width: calc(100% - 40px); /* Subtracting the left and right padding from 100% width */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     display: flex;
-    background-color: #aaaaaa;
-    margin-bottom: 50px;
     align-items: center;
-}
-
-.result-media {
-    display: flex;
-    flex: 1;
-    justify-content: center;
+    justify-content: space-between; /* This separates the elements on both ends */
 }
 
 .result-media img {
-    height: 64px;
-    width: auto;
+    height: 150px; /* Increase height as needed */
+    width: 150px; /* Increase width as needed */
+    margin-right: 20px;
+    object-fit: cover; /* This will cover the area without stretching the image */
+    border-radius: 10px; /* Optional: if you want rounded corners */
 }
 
+/* Ensure the surrounding container of the image adjusts with the new size */
+.result-media {
+    flex: 0 0 auto; /* Do not grow, do not shrink, be auto based on content */
+    margin-right: 20px;
+    display: flex;
+}
 .result-text {
-    flex: 4
+    flex: 3;
+    flex-grow: 1; /* Allows the text to grow and fill available space */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.video-link {
+    flex: 1;
+}
+
+.lyrics-link {
+    flex: 1;
+}
+
+.rate-button {
+    /* This class may need to be adjusted to handle the flex layout of stars */
+    flex: 1;
+    display: flex; /* Set the rate-button area to be a flex container */
+    align-items: center; /* Center the items vertically */
+    justify-content: center; /* Center the items horizontally */
+    margin-left: 10px; /* Add some space before the stars */
+}
+
+.starIcon {
+    /* Ensure the stars are displayed inline */
+    margin: 0 2px; /* Adjust spacing between stars */
 }
 
 .video-link {
     display: flex;
+    align-items: center;
+    justify-content: center; /* Center the link */
+    margin-left: 10px; /* Add some space before the video link */
+    white-space: nowrap; /* Prevents the link from breaking into multiple lines */
+}
+
+/* Modify alignment after search is performed */
+.search-performed .center-container {
+    align-items: flex-start; /* Align to the left after search */
+    justify-content: flex-start; /* Align to the top after search */
+}
+
+/* Hide the hero image when search is performed */
+.search-performed #hero-image-container {
+    display: none;
+}
+
+
+.rate-button {
     flex: 1
+}
+
+.starIcon {
+  fill: grey; /* Default color */
+  width: 24px;
+  height: 24px;
 }

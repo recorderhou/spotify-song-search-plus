@@ -2,17 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="/static/admin.css"> <!-- Please check this path -->
 </head>
 <body>
-    <h2> Welcome admin! Please login:</h2>
-    <form id="admin-login-input">
-        <label for="admin-name">Admin Username: </label>
-        <input id="admin-name" type="text" placeholder="Enter Admin Username" autocomplete="off" required>
-        <label for="admin-password">Admin Password: </label>
-        <input id="admin-password" type="password" autocomplete="off" required>
-        <button type="submit">Login</button>
-    </form>
-<script src="/static/adminauth.js"></script>
+    <div class="split-layout">
+        <div class="left-container">
+            <img src="/static/image/login_image1.png" alt="Music Experience" class="responsive-image"> <!-- Please check this path -->
+        </div>
+        <div class="right-container">
+            <div class="login-box">
+                <img src="/static/image/spotify_logo.png" alt="Spotify Logo" class="spotify-logo"> <!-- Please check this path -->
+                <h2>Welcome admin!</h2>
+                <p>Please login:</p>
+                <form id="admin-login-input">
+                    <!-- Input fields -->
+                    <div class="input-container">
+                        <label for="admin-name">Admin Username:</label>
+                        <input type="text" id="admin-name" placeholder="Enter Admin Username" autocomplete="off" required>
+                    </div>
+                    <div class="input-container">
+                        <label for="admin-password">Admin Password:</label>
+                        <input type="password" id="admin-password" placeholder="Enter Admin Password" autocomplete="off" required>
+                    </div>
+                    <button type="submit" class="login-button">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="/static/adminauth.js"></script> <!-- Please check this path -->
 </body>
 </html>
