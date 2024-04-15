@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
+  
     <nav class="navbar">
         <ul>
             <li><a href="/">HomePage</a></li>
@@ -17,7 +18,8 @@
     </nav>
 
     <div class="top-half">
-        <img src="/static/image/search_image.png" alt="Listening to Music" class="centered-image">
+        <img src="/static/image_oy/listen_to_music2.png" alt="Listening to Music" class="centered-image">
+        <img src="/static/image_oy/spotify_logo2.png" alt="Spotify Logo" id="spotify-logo" />
         You are all good, modify the database as you like!
         <div id="modify-choice">
             <button id="modify-insert" onclick="insertData()">Insert</button>
@@ -26,10 +28,25 @@
         </div>
     </div>
 
+    <div class="bottom-half">
+        <h1>You are all good, modify the database as you like!</h1>
+        <div id="modify-choice">
+            <button onclick="insertData()">
+                <img src="/static/image_oy/insert.png" alt="Insert Icon"> Insert
+            </button>
+            <button onclick="modifyData()">
+                <img src="/static/image_oy/modify.png" alt="Modify Icon"> Modify
+            </button>
+            <button onclick="deleteData()">
+                <img src="/static/image_oy/delete.png" alt="Delete Icon"> Delete
+            </button>
+        </div>
+    </div> 
+
 
 
     <div id="insert-data">
-        <div id="insert-choice" style="display: none;">
+        <div id="insert-choice" style="display: none;"> <!-- Set to block to make it visible -->
             <form id="insert-choice-form">
                 <label for="insert-select">Please indicate what you want to insert:</label>
                 <!--  multiple onchange="updateOptions()" -->
@@ -44,6 +61,7 @@
                 </div>
             </form>
         </div>
+    </div>
 
         <div id="insert-form" style="display: none;">
             <form id="insert-filter-input">
@@ -106,7 +124,7 @@
 
     <div id="modify-data">
         <div id="modify-form" style="display: none;">
-            <form id="modify-form-input">
+            <form id="modify-choice-form" class="choice-form">
                 <fieldset>
                     <legend>Modify Queries</legend>
                     <label for="modify-song">Enter the song name you want to modify:</label>
@@ -114,19 +132,16 @@
                     <label for="modify-artist">Enter the artist name of the song you want to modify:</label>
                     <input id="modify-artist" type="text">
                 </fieldset>
-                <button type="submit">Submit Query</button>
-                <button type="reset">Cancel</button>
+                <div class="form-buttons">
+                    <button type="submit">Submit Query</button>
+                    <button type="reset">Cancel</button>
+                </div>
             </form>
         </div>
-
-        <div id="modify-query-result">
-
-        </div>
-    </div>
-
+    
     <div id="delete-data">
         <div id="delete-form" style="display: none;">
-            <form id="delete-form-input">
+            <form id="delete-choice-form" class="choice-form">
                 <fieldset>
                     <legend>Delete</legend>
                     <label for="delete-song">Enter the song name you want to delete:</label>
@@ -134,10 +149,12 @@
                     <label for="delete-artist">Enter the artist name of the song you want to delete:</label>
                     <input id="delete-artist" type="text">
                 </fieldset>
-                <button type="submit">Submit Query</button>
-                <button type="reset">Cancel</button>
+                <div class="form-buttons">
+                    <button type="submit">Submit Query</button>
+                    <button type="reset">Cancel</button>
+                </div>
             </form>
-        </div>
+        </div>    
 
         <div id="delete-query-result">
 

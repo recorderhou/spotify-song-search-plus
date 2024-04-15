@@ -1,3 +1,4 @@
+.DS_Store
 # Default ignored files
 /shelf/
 /workspace.xml
@@ -6,3 +7,7 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+/.venv
+/__pycache__
+/.idea
+/db.py
