@@ -2,3 +2,4 @@ __pycache__/
 db.py
 .DS_store
 /static/modifydb1.css
+/idea
