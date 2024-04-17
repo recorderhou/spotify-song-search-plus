@@ -729,7 +729,7 @@ function displayInsertLyrics() {
                     <p class="result-artist">${entry.result.primary_artist.name}</p>
                 </div>
                 <div>
-                    <a href=${entry.result.url}>Lyrics Link</a>
+                    <a href=${entry.result.url} target="_blank">Lyrics Link</a>
                 </div>
                 <div class="insert-button">
                     <span class="material-symbols-outlined insert-button-icon"  data-id="${entryIndex}" onclick="insertLyrics(this)">add</span>
@@ -825,14 +825,24 @@ document.getElementById('insert-choice-form').addEventListener('submit', functio
     if (selectedOptions === 'song') {
         const songElement = document.getElementById('insert-song-field')
         songElement.style.display = 'block'
+        const parentElement = document.getElementById('insert-form-input')
+        parentElement.style.display = 'block'
         const songInput = songElement.querySelectorAll('input');
         songInput.forEach((entry, index) => {
             entry.required = true
         });
         const videoElement = document.getElementById('insert-video-field')
         videoElement.style.display = 'none';
+        const videoInput = videoElement.querySelectorAll('input');
+        videoInput.forEach((entry, index) => {
+            entry.required = false
+        });
         const lyricsElement = document.getElementById('insert-lyrics-field')
         lyricsElement.style.display = 'none'
+        const lyricsInput = lyricsElement.querySelectorAll('input');
+        lyricsInput.forEach((entry, index) => {
+            entry.required = false
+        });
 
         const queryElement = document.getElementById('insert-filter-input')
         queryElement.style.display = 'none'
@@ -854,10 +864,18 @@ document.getElementById('insert-choice-form').addEventListener('submit', functio
         parentElement.style.display = 'none'
         const songElement = document.getElementById('insert-song-field')
         songElement.style.display = 'none'
+        const songInput = songElement.querySelectorAll('input');
+        songInput.forEach((entry, index) => {
+            entry.required = false
+        });
         const videoElement = document.getElementById('insert-video-field')
         videoElement.style.display = 'none';
         const lyricsElement = document.getElementById('insert-lyrics-field')
         lyricsElement.style.display = 'none'
+        const lyricsInput = lyricsElement.querySelectorAll('input');
+        lyricsInput.forEach((entry, index) => {
+            entry.required = false
+        });
         const formElement = document.getElementById('insert-filter-input')
         formElement.style.display = 'block'
         const queryElement = document.getElementById('insert-song-query')
@@ -880,6 +898,10 @@ document.getElementById('insert-choice-form').addEventListener('submit', functio
         songElement.style.display = 'none'
         const videoElement = document.getElementById('insert-video-field')
         videoElement.style.display = 'none';
+        const videoInput = videoElement.querySelectorAll('input');
+        videoInput.forEach((entry, index) => {
+            entry.required = false
+        });
         const lyricsElement = document.getElementById('insert-lyrics-field')
         lyricsElement.style.display = 'none';
 

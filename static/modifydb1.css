@@ -1,13 +1,14 @@
+/* Add this to a common CSS file */
 body {
-    background-color: black;
-    color: white;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100vh;
-}
+        background-color: black;
+        color: white;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100vh;
+    }
 
 .top-half {
     display: flex;
@@ -31,9 +32,8 @@ body {
 
 h1 {
     margin: 0;
-    font-size: 2.5em;
+    font-size: 2.5em; /* Increased font size */
     padding: 20px 0;
-    color: black; /* Text color changed to black */
 }
 
 #modify-choice {
@@ -44,7 +44,7 @@ h1 {
 }
 
 #modify-choice button {
-    background-color: #1DB954;
+    background-color: #1DB954; /* Spotify green */
     color: white;
     border: none;
     padding: 10px 20px;
@@ -54,7 +54,7 @@ h1 {
 }
 
 #modify-choice button:hover {
-    background-color: #1ED760;
+    background-color: #1ED760; /* Lighter Spotify green */
 }
 
 #modify-choice img {
@@ -96,7 +96,7 @@ h1 {
 #insert-choice-form button[type="submit"],
 #modify-choice-form button[type="submit"],
 #delete-choice-form button[type="submit"] {
-    background-color: #1DB954;
+    background-color: #1DB954; /* Spotify green */
     color: white;
     padding: 5px 15px;
     border: none;
@@ -110,19 +110,21 @@ h1 {
 #insert-choice-form button[type="submit"]:hover,
 #modify-choice-form button[type="submit"]:hover,
 #delete-choice-form button[type="submit"]:hover {
-    background-color: #1ED760;
+    background-color: #1ED760; /* Lighter Spotify green */
 }
 
 label {
     display: block;
     margin-top: 10px;
-    color: white; /* Text color changed to black */
 }
 
 .form-buttons button {
     display: inline-block;
     margin-right: 10px;
 }
+
+
+
 
 .navbar {
     background-color: #333;
@@ -134,9 +136,6 @@ label {
     list-style-type: none;
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: flex-end;
-    width: 100%;
 }
 
 .navbar li {
@@ -156,51 +155,31 @@ label {
     color: black;
 }
 
+
 .search-result {
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 10px auto;
-    padding: 20px;
     display: flex;
-    align-items: center; /* Keep items aligned at center */
-    justify-content: space-between;
-    width: 90%;
-    max-width: 1200px; /* Or set the max width you prefer */
+    background-color: #aaaaaa;
+    margin-bottom: 50px;
+    align-items: center;
 }
 
-
-.search-result .result-media {
-    flex: 0 0 30%; /* Do not grow, do not shrink, set basis to 30% */
-    margin-right: 20px; /* Add some space between image and text */
+.result-media {
+    display: flex;
+    flex: 1;
+    justify-content: center;
 }
 
-.search-result .result-media img {
-    width: 100%; /* Make the image responsive within its container */
-    height: auto;
-    border-radius: 5px;
+.result-media img {
+    height: 64px;
+    width: auto;
 }
 
-.search-result .result-text {
-    flex: 2; /* Take the remaining space */
-    padding-left: 50px; /* Add some space to the left of the text */
-    color: black;
-    font-size: 20px;
+.result-text {
+    flex: 3
 }
 
-.search-result .delete-button {
-    flex: 0 0 auto; /* Do not grow or shrink */
-    color: black;
-    padding-left: 20px; /* Add space between text and delete button */
-    font-size: 50px; /* Adjust as necessary */
-    cursor: pointer;
-}
-
-/* Adjustments for the search bar, assuming you are referring to an input element */
-.search-bar { /* Replace with actual class or ID of your search bar */
-    width: 50%; /* Reduce the width */
-    margin: 0 auto; /* Center it if needed */
-    display: block; /* Assuming it's an input field */
+.delete-button {
+    flex: 1
 }
 
 .song-form {
@@ -224,7 +203,7 @@ label {
     margin: 5px 0 20px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box;
+    box-sizing: border-box; /* Added this for better input sizing */
 }
 
 .song-form button {
@@ -247,7 +226,7 @@ label {
 
 .expandable-section .expandable-title {
     cursor: pointer;
-    color: white;
+    color: blue;
     text-decoration: underline;
 }
 
@@ -257,7 +236,9 @@ label {
     margin-bottom: 5px;
 }
 
+
 /* Style for when the section is expanded */
 .expandable-section.expanded .expandable-content {
     display: block;
 }
+
