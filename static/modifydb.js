@@ -15,6 +15,8 @@ function insertData() {
     console.log('insert place')
     document.getElementById('modify-modify').disabled = true;
     document.getElementById('modify-delete').disabled = true;
+    let upperElement = document.querySelector('.top-half');
+    upperElement.style.display = 'none';
     let displayElement = document.getElementById('insert-data');
     displayElement.style.display = 'block';
     let insertElement = document.getElementById('insert-choice');
@@ -37,6 +39,8 @@ function modifyData() {
     console.log('modify place')
     document.getElementById('modify-insert').disabled = true;
     document.getElementById('modify-delete').disabled = true;
+    let upperElement = document.querySelector('.top-half');
+    upperElement.style.display = 'none';
     let displayElement = document.getElementById('insert-data');
     displayElement.style.display = 'none';
     let insertElement = document.getElementById('insert-choice');
@@ -58,6 +62,8 @@ function modifyData() {
 function deleteData() {
     document.getElementById('modify-insert').disabled = true;
     document.getElementById('modify-modify').disabled = true;
+    let upperElement = document.querySelector('.top-half');
+    upperElement.style.display = 'none';
     let displayElement = document.getElementById('insert-data');
     displayElement.style.display = 'none';
     let insertElement = document.getElementById('insert-choice');
@@ -182,6 +188,7 @@ function updateSearchResult() {
 function saveChanges(index) {
     console.log('inside modify')
     console.log(modifyResult[index])
+    console.log(modifyCache)
     fetch('/modifyquery', {
         method: 'POST',
             headers: {
@@ -195,7 +202,8 @@ function saveChanges(index) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                modifyResult[index] = modifyCache
+                modifyResult[index] = JSON.parse(JSON.stringify(modifyCache));
+                console.log('after submitting', modifyResult[index])
             } else {
                 console.log('modify failed');
                 console.log(data.message)
@@ -236,27 +244,30 @@ function reformatData(formData) {
     modifyCache.explicit = returnData.explicit;
     modifyCache.duration_ms = returnData.durationMs;
     console.log(modifyCache)
-    if (typeof returnData.video_info === typeof [1, 2, 3, 4])
+    console.log(Array.isArray(returnData['video-id']))
+    if (Array.isArray(returnData['video-id']))
         for (let [index, entry] of modifyCache.video_info.entries()) {
             entry.video_id = returnData['video-id'][index];
             entry.song_title = returnData['video-title'][index];
             entry.artist_name = returnData['video-artist'][index];
         }
-    else
+    else{
+        console.log('inside else')
         modifyCache.video_info[0].video_id = returnData['video-id']
         modifyCache.video_info[0].song_title = returnData['video-title']
         modifyCache.video_info[0].artist_name = returnData['video-artist']
-    if (typeof returnData.video_info === typeof [1, 2, 3, 4])
+    }
+    if (Array.isArray(returnData['lyrics-title']))
         for (let [index, entry] of modifyCache.lyrics_info.entries()) {
             entry.title = returnData['lyrics-title'][index];
             entry.url = returnData['lyrics-url'][index];
             entry.artist = returnData['lyrics-artist'][index];
         }
-    else
+    else{
         modifyCache.lyrics_info[0].title = returnData['lyrics-title']
         modifyCache.lyrics_info[0].url = returnData['lyrics-url']
         modifyCache.lyrics_info[0].artist = returnData['lyrics-artist']
-
+    }
     console.log(returnData)
     console.log(modifyCache)
 
@@ -267,6 +278,7 @@ function displayModifySongs () {
     let res = modifyResult;
     let element = document.getElementById('modify-query-result')
     for (let [entryIndex, entry] of res.entries()) {
+        entry = modifyResult[entryIndex];
         let div = document.createElement("div");
         div.className = 'modify-template'
         div.innerHTML = `
@@ -294,7 +306,10 @@ function displayModifySongs () {
                     }
                 });
             } else {
+                console.log('inside reopen')
                 console.log(modifyResult[entryIndex])
+                console.log(entry)
+                entry = modifyResult[entryIndex];
                 modifyCache = JSON.parse(JSON.stringify(modifyResult[entryIndex]));
                 allResult.forEach((element, index) => {
                     if (index === entryIndex) {
@@ -398,11 +413,11 @@ function displayModifySongs () {
                 document.getElementById('songForm').addEventListener('submit', function (e) {
                     e.preventDefault(); // Prevent the default form submission
                     const formData = new FormData(this);
-                    console.log(modifyResult[entryIndex]);
-                    console.log(modifyResult[entryIndex] === modifyCache)
+                    console.log('before reformat', modifyResult[entryIndex] === modifyCache)
                     reformatData(formData);
-                    console.log(modifyResult[entryIndex]);
+                    console.log('after reformat', modifyResult[entryIndex]);
                     saveChanges(entryIndex);
+                    console.log('after save', modifyResult[entryIndex]);
 
                     let addedDiv = document.querySelector('.inserted-div');
                     addedDiv.remove();
@@ -411,6 +426,38 @@ function displayModifySongs () {
                             element.style.display = '';  // Show the clicked element
                         }
                     });
+                })
+                document.getElementById('songForm').addEventListener('reset', function (e) {
+                    modifyCache = modifyResult[entryIndex];
+                    let lyricsDiv = document.querySelector('.expandable-lyrics');
+                    lyricsDiv.innerHTML = `
+                        ${modifyCache.lyrics_info.map((lyrics, index) => `
+                            <div class="lyrics-entry">
+                                <fieldset>
+                                    <legend> Video ${index} ${lyrics.title}</legend>
+                                    <input type="text" name="lyrics-title_${index}" class="lyrics-name-input" value="${lyrics.title}" data-index="${index}" />
+                                    <input type="text" name="lyrics-url_${index}" class="lyrics-url-input" value="${lyrics.url}" data-index="${index}" />
+                                    <input type="text" name="lyrics-artist_${index}" class="lyrics-artist-input" value="${lyrics.artist}" data-index="${index}" />
+                                    <span class="material-symbols-outlined cancel-icon" data-index="${index}" onclick="removeLyrics(this, ${index})">cancel</span>
+                                </fieldset>
+                            </div>
+                            
+                            `).join('')}`
+                    let videoDiv = document.querySelector('.expandable-video');
+                    videoDiv.innerHTML = `
+                        ${modifyCache.video_info.map((video, index) => `
+                            <div class="video-entry">
+                                <fieldset>
+                                    <legend> Video ${index} ${video.song_title}</legend>
+                                    <input type="text" name="video-id_${index}" class="video-id-input" value="${video.video_id}" data-index="${index}" />
+                                    <input type="text" name="video-title_${index}" class="video-title-input" value="${video.song_title}" data-index="${index}" />
+                                    <input type="text" name="video-artist_${index}" class="video-artist-input" value="${video.artist_name}" data-index="${index}" />
+                                    <span class="material-symbols-outlined cancel-icon" data-index="${index}" onclick="removeVideo(this, ${index})">cancel</span>
+                                </fieldset>
+                            </div>
+                            
+                            `).join('')}`
+
                 })
             }
 
@@ -446,6 +493,8 @@ document.getElementById('modify-form-input').addEventListener('submit', function
 document.getElementById('modify-form-input').addEventListener('reset', function (e) {
     let buttonElement = document.getElementById('modify-choice');
     let buttons = buttonElement.querySelectorAll('button');
+    let upperElement = document.querySelector('.top-half');
+    upperElement.style.display = 'flex';
     for (let index in buttons) buttons[index].disabled = false;
     let element = document.getElementById('modify-query-result')
     element.innerHTML = ''
@@ -764,6 +813,8 @@ document.getElementById('delete-form-input').addEventListener('submit', function
 
 document.getElementById('delete-form-input').addEventListener('reset', function (e) {
     let buttonElement = document.getElementById('modify-choice');
+    let upperElement = document.querySelector('.top-half');
+    upperElement.style.display = 'flex';
     let buttons = buttonElement.querySelectorAll('button');
     for (let index in buttons) buttons[index].disabled = false;
     let element = document.getElementById('delete-query-result')
@@ -920,6 +971,8 @@ document.getElementById('insert-choice-form').addEventListener('submit', functio
 document.getElementById('insert-choice-form').addEventListener('reset', function () {
     let displayElement = document.getElementById('insert-data');
     displayElement.style.display = 'none';
+    let upperElement = document.querySelector('.top-half');
+    upperElement.style.display = 'flex';
     let buttonElement = document.getElementById('modify-choice');
     let buttons = buttonElement.querySelectorAll('button');
     for (let index in buttons) buttons[index].disabled = false;
@@ -962,6 +1015,8 @@ document.getElementById('insert-filter-input').addEventListener('reset', functio
     element.innerHTML = ''
     let currentElement = document.getElementById('insert-filter-input')
     currentElement.style.display = 'none'
+    let upperElement = document.querySelector('.top-half');
+    upperElement.style.display = 'flex';
 
 })
 
@@ -976,6 +1031,8 @@ document.getElementById('insert-form-input').addEventListener('reset', function 
     let buttonElement = document.getElementById('modify-choice');
     let buttons = buttonElement.querySelectorAll('button');
     for (let index in buttons) buttons[index].disabled = false;
+    let upperElement = document.querySelector('.top-half');
+    upperElement.style.display = 'flex';
 })
 
 document.getElementById('insert-form-input').addEventListener('submit', function (e) {

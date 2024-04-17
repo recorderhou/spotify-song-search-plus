@@ -7,6 +7,7 @@ body {
     flex-direction: column;
     justify-content: space-between;
     height: 100vh;
+    display: block;
 }
 
 .top-half {
@@ -17,6 +18,7 @@ body {
     flex: 1;
     width: 100%;
     overflow: hidden;
+    margin-top: 20px;
 }
 
 .bottom-half, #insert-data, #modify-data, #delete-data {
@@ -70,8 +72,8 @@ h1 {
 }
 
 #insert-choice-form,
-#modify-choice-form,
-#delete-choice-form {
+#modify-form-input,
+#delete-form-input {
     background: rgba(86, 88, 91, 0.9);
     padding: 10px;
     border-radius: 10px;
@@ -93,9 +95,9 @@ h1 {
 }
 
 .form-buttons button,
-#insert-choice-form button[type="submit"],
-#modify-choice-form button[type="submit"],
-#delete-choice-form button[type="submit"] {
+#insert-form-input button,
+#modify-form-input button,
+#delete-form-input button {
     background-color: #1DB954;
     color: white;
     padding: 5px 15px;
@@ -107,11 +109,14 @@ h1 {
 }
 
 .form-buttons button:hover,
-#insert-choice-form button[type="submit"]:hover,
-#modify-choice-form button[type="submit"]:hover,
-#delete-choice-form button[type="submit"]:hover {
+#insert-form-input button:hover,
+#modify-form-input button:hover,
+#delete-form-input button:hover {
     background-color: #1ED760;
 }
+
+
+
 
 label {
     display: block;
@@ -260,4 +265,10 @@ label {
 /* Style for when the section is expanded */
 .expandable-section.expanded .expandable-content {
     display: block;
+}
+
+.insert-button-icon {
+    color: black;
+    width: 30px;
+    height: auto;
 }

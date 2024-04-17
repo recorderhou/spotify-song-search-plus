@@ -13,6 +13,7 @@ function UserAuth(userName, userPassword){
     })
     .then(response => response.json())
     .then(data => {
+        console.log(data.success)
         if (data.success) {
             window.location.href = data.redirect_url;
         } else {

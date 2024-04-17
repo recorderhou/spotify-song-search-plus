@@ -54,12 +54,14 @@ def user_auth():
     username = user_login['username']
     password = user_login['password']
     print(username, password)
-    user = client.distdb0.user.find_one({'username': username, 'password': password})
+    user = client.distdb0.user.find_one({'username': username})
     if user:
         if user['password'] == password:
+            print('correct')
             session['username'] = username
             return jsonify({'success': True, 'redirect_url': url_for('search')})
         else:
+            print('wrong')
             return jsonify({'success': False, 'redirect_url': url_for('wrong_auth')})
     else:
         client.distdb0.user.insert_one({'username': username, 'password': password})
@@ -194,8 +196,8 @@ def modify_query():
         video['_id'] = ObjectId(video['_id'])
     for lyrics in input['lyrics_info']:
         lyrics['_id'] = ObjectId(lyrics['_id'])
-    print(origin['prim_artist'])
-    print(input['prim_artist'])
+    print(origin['video_info'])
+    print(input['video_info'])
     print('origin hash is', h_origin)
     print('modified hash is', h_input)
     if h_origin == h_input:

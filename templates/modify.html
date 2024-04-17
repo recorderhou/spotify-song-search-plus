@@ -17,14 +17,24 @@
     </nav>
 
     <div class="top-half">
-        <img src="/static/image/search_image.png" alt="Listening to Music" class="centered-image">
-        You are all good, modify the database as you like!
+        <img src="/static/image_oy/listen_to_music2.png" alt="Listening to Music" class="centered-image">
+    </div>
+
+    <div class="bottom-half">
+        <h1>You are all good, modify the database as you like!</h1>
         <div id="modify-choice">
-            <button id="modify-insert" onclick="insertData()">Insert</button>
-            <button id="modify-modify" onclick="modifyData()">Modify</button>
-            <button id="modify-delete" onclick="deleteData()">Delete</button>
+            <button id="modify-insert" onclick="insertData()">
+                <img src="/static/image_oy/insert.png" alt="Insert Icon"> Insert
+            </button>
+            <button id="modify-modify" onclick="modifyData()">
+                <img src="/static/image_oy/modify.png" alt="Modify Icon"> Modify
+            </button>
+            <button id="modify-delete" onclick="deleteData()">
+                <img src="/static/image_oy/delete.png" alt="Delete Icon"> Delete
+            </button>
         </div>
     </div>
+
 
 
 
@@ -106,7 +116,7 @@
 
     <div id="modify-data">
         <div id="modify-form" style="display: none;">
-            <form id="modify-form-input">
+            <form id="modify-form-input" class="choice-form">
                 <fieldset>
                     <legend>Modify Queries</legend>
                     <label for="modify-song">Enter the song name you want to modify:</label>
@@ -126,7 +136,7 @@
 
     <div id="delete-data">
         <div id="delete-form" style="display: none;">
-            <form id="delete-form-input">
+            <form id="delete-form-input" class="choice-form">
                 <fieldset>
                     <legend>Delete</legend>
                     <label for="delete-song">Enter the song name you want to delete:</label>
