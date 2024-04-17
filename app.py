@@ -4,6 +4,7 @@ from db import client
 import os
 import requests
 from googleapiclient.discovery import build
+import re
 
 app = Flask(__name__)
 
@@ -17,6 +18,19 @@ def h(name):
     return ord(name[0]) % 4
 
 
+def score(target, template):
+    lower_target = target.lower()
+    lower_template = template.lower()
+    pattern = fr'(\W{lower_target}\b|\b{lower_target}\W)'
+    if lower_target == lower_template:
+        return 1.0
+    elif ' ' + lower_target + ' ' in lower_template:
+        return 0.8
+    elif ' ' + lower_target in lower_template or lower_target + ' ' in lower_template:
+        return 0.5
+    elif re.search(pattern, lower_template):
+        return 0.5
+    return 0.0
 
 
 @app.route('/')
@@ -128,10 +142,19 @@ def query():
     key_words = request.args.get('query', default='', type=str)
     print(key_words)
     res = []
+    res_score = []
+    rating = set()
+    # get rating
+    cur_user = client.distdb0.user.find_one({'username': session['username']})
+    if 'rating' in cur_user:
+        for rate in cur_user['rating']:
+            if rate['rating'] >= 3:
+                rating.add(rate['song_id'])
+
     for i in range(4):
         # Dynamically generate the collection name
         # Access the collection from the client
-        collection = getattr(client, f'distdb{i}').aggregation_results_new
+        collection = getattr(client, f'distdb{i}').aggregation_results
         # collection = client.distdb0.aggregation_results
         query = {'name': {'$regex': key_words, '$options': 'i'}}
         for document in collection.find(query):
@@ -141,8 +164,26 @@ def query():
             for lyrics in document['lyrics_info']:
                 lyrics['_id'] = str(lyrics['_id'])
             print(document['prim_artist'])
+            cur_score = score(key_words, document['name'])
+            if document['_id'] in rating:
+                cur_score = cur_score + 0.5
+            cur_score = cur_score + document['popularity'] * 0.001
+            res_score.append(cur_score)
             res.append(document)
-    return jsonify(res)
+
+    combined = list(zip(res_score, res))
+
+    # Step 2: Sort the combined list by scores (which are the first element in the tuples)
+    combined.sort(key=lambda x: x[0], reverse=True)
+
+    # Step 3: Unzip into two lists
+    res_score_sorted, res_sorted = zip(*combined)
+
+    # Convert tuples back to lists, if necessary
+    res_score_sorted = list(res_score_sorted)
+    res_sorted = list(res_sorted)
+    print(res_score_sorted)
+    return jsonify(res_sorted)
 
 
 @app.route('/adminquery')
