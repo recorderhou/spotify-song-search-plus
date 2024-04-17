@@ -194,7 +194,7 @@ def delete_query():
     print(artist)
     res = []
     for i in range(4):
-        collection = getattr(client, f'distdb{i}').aggregation_results_new
+        collection = getattr(client, f'distdb{i}').aggregation_results
         query = {'name': {'$regex': song, '$options': 'i'}, 'prim_artist': {'$regex': artist, '$options': 'i'} }
         for document in collection.find(query):
             print(document)
@@ -214,7 +214,7 @@ def delete():
     print(deletion)
     hash_value = h(deletion['prim_artist'])
     try:
-        collection = getattr(client, f'distdb{hash_value}').aggregation_results_new
+        collection = getattr(client, f'distdb{hash_value}').aggregation_results
         deletion_id = ObjectId(deletion['_id'])
         # client.distdb0.test_delete.delete_one({'_id': deletion_id})
         collection.delete_one({'_id': deletion_id})
@@ -243,7 +243,7 @@ def modify_query():
     print('modified hash is', h_input)
     if h_origin == h_input:
         try:
-            collection = getattr(client, f'distdb{h_origin}').aggregation_results_new
+            collection = getattr(client, f'distdb{h_origin}').aggregation_results
             collection.update_one({'_id': ObjectId(select_id)}, {'$set': input})
             return {'success': True}
         except Exception as e:
@@ -251,11 +251,11 @@ def modify_query():
             return {'success': False, 'message': str(e)}
     else:
         try:
-            origin_collection = getattr(client, f'distdb{h_origin}').aggregation_results_new
+            origin_collection = getattr(client, f'distdb{h_origin}').aggregation_results
             found = origin_collection.find_one({'_id': ObjectId(select_id)})
             print(found)
             origin_collection.delete_one({'_id': ObjectId(select_id)})
-            new_collection = getattr(client, f'distdb{h_origin}').aggregation_results_new
+            new_collection = getattr(client, f'distdb{h_origin}').aggregation_results
             input['_id'] = ObjectId(select_id)
             print(input)
             new_collection.insert_one(input)
@@ -328,13 +328,13 @@ def insert():
             print(hash_value)
             try:
                 if hash_value == 0:
-                    client.distdb0.test_insert.insert_one(song)
+                    client.distdb0.aggregation_results.insert_one(song)
                 elif hash_value == 1:
-                    client.distdb1.test_insert.insert_one(song)
+                    client.distdb1.aggregation_results.insert_one(song)
                 elif hash_value == 2:
-                    client.distdb2.test_insert.insert_one(song)
+                    client.distdb2.aggregation_results.insert_one(song)
                 elif hash_value == 3:
-                    client.distdb3.test_insert.insert_one(song)
+                    client.distdb3.aggregation_results.insert_one(song)
                 return ({'success': True})
             except Exception as e:
                 print(str(e))
@@ -353,7 +353,7 @@ def insert():
             print(insert_video)
             hash_value = h(track['prim_artist'])
             try:
-                collection = getattr(client, f'distdb{hash_value}').aggregation_results_new
+                collection = getattr(client, f'distdb{hash_value}').aggregation_results
                 collection.update_one({'_id': ObjectId(track['_id'])}, {'$push': {'video_info': insert_video}},
                                                       upsert=True)
                 return ({'success': True})
@@ -374,7 +374,7 @@ def insert():
             hash_value = h(track['prim_artist'])
             print(insert_lyrics)
             try:
-                collection = getattr(client, f'distdb{hash_value}').aggregation_results_new
+                collection = getattr(client, f'distdb{hash_value}').aggregation_results
                 collection.update_one({'_id': ObjectId(track['_id'])}, {'$push': {'lyrics_info': insert_lyrics}},
                                                       upsert=True)
                 return ({'success': True})

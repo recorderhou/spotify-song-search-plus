@@ -251,7 +251,7 @@ function reformatData(formData) {
             entry.song_title = returnData['video-title'][index];
             entry.artist_name = returnData['video-artist'][index];
         }
-    else{
+    else if (returnData['video-id']){
         console.log('inside else')
         modifyCache.video_info[0].video_id = returnData['video-id']
         modifyCache.video_info[0].song_title = returnData['video-title']
@@ -263,7 +263,7 @@ function reformatData(formData) {
             entry.url = returnData['lyrics-url'][index];
             entry.artist = returnData['lyrics-artist'][index];
         }
-    else{
+    else if (returnData['lyrics-title']){
         modifyCache.lyrics_info[0].title = returnData['lyrics-title']
         modifyCache.lyrics_info[0].url = returnData['lyrics-url']
         modifyCache.lyrics_info[0].artist = returnData['lyrics-artist']
@@ -457,7 +457,16 @@ function displayModifySongs () {
                             </div>
                             
                             `).join('')}`
-
+                    let artistDiv = document.querySelector('.expandable-artist');
+                    artistDiv.innerHTML = `
+                        ${entry.artists.map((artist, index) => `
+                            <div class="artist-entry">
+                                ${index > 0 ? `
+                                <input type="text" name="artist_${index}" class="artist-name-input" value="${artist.name}" data-index="${index}" />
+                                <span class="material-symbols-outlined cancel-icon" onclick="removeArtist(this, ${index})">cancel</span>` : ''}
+                            </div>
+                        `).join('')}
+                    `
                 })
             }
 
