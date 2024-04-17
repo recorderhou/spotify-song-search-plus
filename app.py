@@ -164,10 +164,12 @@ def query():
             for lyrics in document['lyrics_info']:
                 lyrics['_id'] = str(lyrics['_id'])
             print(document['prim_artist'])
+            print(document['popularity'])
             cur_score = score(key_words, document['name'])
             if document['_id'] in rating:
                 cur_score = cur_score + 0.5
-            cur_score = cur_score + document['popularity'] * 0.001
+
+            cur_score = cur_score + float(document['popularity']) * 0.001
             res_score.append(cur_score)
             res.append(document)
 

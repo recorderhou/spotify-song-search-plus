@@ -18,7 +18,10 @@ body {
     flex: 1;
     width: 100%;
     overflow: hidden;
-    margin-top: 20px;
+}
+
+.top-half img {
+    margin-top: 80px;
 }
 
 .bottom-half, #insert-data, #modify-data, #delete-data {
@@ -28,7 +31,7 @@ body {
     align-items: center;
     flex: 0 1 auto;
     padding-top: 0;
-    margin-top: 40px;
+    margin-top: 0;
 }
 
 h1 {
@@ -46,7 +49,7 @@ h1 {
 }
 
 #modify-choice button {
-    background-color: #1DB954;
+    background-color: #bbbbbb;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -97,7 +100,8 @@ h1 {
 .form-buttons button,
 #insert-form-input button,
 #modify-form-input button,
-#delete-form-input button {
+#delete-form-input button,
+#insert-song-query button{
     background-color: #1DB954;
     color: white;
     padding: 5px 15px;
@@ -111,7 +115,8 @@ h1 {
 .form-buttons button:hover,
 #insert-form-input button:hover,
 #modify-form-input button:hover,
-#delete-form-input button:hover {
+#delete-form-input button:hover,
+#insert-song-query button:hover{
     background-color: #1ED760;
 }
 
@@ -133,6 +138,10 @@ label {
     background-color: #333;
     color: white;
     overflow: hidden;
+    position: fixed;
+    z-index: 1000;
+    width: 100%;
+    display: flex;
 }
 
 .navbar ul {
